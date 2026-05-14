@@ -1,0 +1,22 @@
+﻿@model List<CMS.Data.Entities.Order>
+
+<h2>Danh sách Orders</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>OrderDate</th>
+        <th>CustomerId</th>
+        <th>Status</th>
+        <th>Notes</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.OrderDate</td>
+            <td>@item.CustomerId</td>
+            <td>@item.Status</td>
+            <td>@item.Notes</td>
+        </tr>
+    }
+</table>
