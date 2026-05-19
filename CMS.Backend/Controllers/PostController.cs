@@ -1,4 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*
+*Sinh vien: Nguyen Thi Thu Thuy
+*Ma sv: 2123110071
+*Ngay tao: 14-05-2026
+*Version: 1.0
+*
+*/
+
+using Microsoft.AspNetCore.Mvc;
 using CMS.Data.Entities; // Quan trọng: Phải có dòng này để dùng lớp Post
 
 namespace CMS.Backend.Controllers
@@ -55,9 +63,9 @@ namespace CMS.Backend.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            if (post == null) return NotFound();
+            if (post == null) return NotFound(); // Trường hợp không tìm thấy bài viết
 
-            return View(post);
+            return View(post); // Truyền đối tượng Post sang View để hiển thị chi tiết
         }
     }
 }
