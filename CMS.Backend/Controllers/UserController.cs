@@ -1,4 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*
+*Sinh vien: Nguyen Thi Thu Thuy
+*Ma sv: 2123110071
+*Ngay tao: 14-05-2026
+*Version: 1.0
+*
+*/
+
+using Microsoft.AspNetCore.Mvc;
 using CMS.Data.Entities; // Phải có dòng này để dùng lớp User
 
 namespace CMS.Backend.Controllers
