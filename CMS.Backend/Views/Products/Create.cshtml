@@ -1,0 +1,75 @@
+﻿@model CMS.Data.Entities.Product
+
+<div class="container mt-4">
+
+    <h2 class="text-success">
+        THÊM SẢN PHẨM
+    </h2>
+
+    <hr />
+
+    <form asp-action="Create" method="post">
+
+        <div class="mb-3">
+            <label>Tên sản phẩm</label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Mô tả</label>
+            <textarea asp-for="Description"
+                      class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Giá</label>
+            <input asp-for="Price"
+                   class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Tồn kho</label>
+            <input asp-for="StockQuantity"
+                   class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Hình ảnh</label>
+            <input asp-for="ImageUrl"
+                   class="form-control" />
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="mb-3">
+
+            <label>Danh mục sản phẩm</label>
+
+            <select asp-for="CategoryProductId"
+                    asp-items="ViewBag.CategoryProductId"
+                    class="form-select">
+
+                <option value="">
+                    -- Chọn danh mục --
+                </option>
+
+            </select>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-success">
+
+            Lưu
+
+        </button>
+
+        <a href="/Products/Index"
+           class="btn btn-secondary">
+
+            Hủy
+
+        </a>
+
+    </form>
+
+</div>

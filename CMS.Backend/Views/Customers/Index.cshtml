@@ -1,22 +1,55 @@
 ﻿@model List<CMS.Data.Entities.Customer>
 
-<h2>Danh sách Customers</h2>
+<div class="container mt-4">
 
-<table class="table table-bordered">
-    <tr>
-        <th>FullName</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Address</th>
-    </tr>
+    <div class="d-flex justify-content-between mb-3">
+        <h2 class="text-primary">DANH SÁCH KHÁCH HÀNG</h2>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.FullName</td>
-            <td>@item.Email</td>
-            <td>@item.Phone</td>
-            <td>@item.Address</td>
-        </tr>
-    }
-</table>
+        <a href="/Customers/Create" class="btn btn-success">
+            + Thêm khách hàng
+        </a>
+    </div>
+
+    <table class="table table-bordered table-hover shadow-sm">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Địa chỉ</th>
+                <th width="180">Chức năng</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FullName</td>
+                    <td>@item.Email</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Address</td>
+
+                    <td>
+                        <a href="/Customers/Edit/@item.Id"
+                           class="btn btn-warning btn-sm">
+                            Sửa
+                        </a>
+
+                        <a href="/Customers/Delete/@item.Id"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa không?')">
+                            Xóa
+                        </a>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>

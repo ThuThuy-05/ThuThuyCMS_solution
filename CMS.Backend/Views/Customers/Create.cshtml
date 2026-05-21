@@ -1,0 +1,51 @@
+﻿@model CMS.Data.Entities.Customer
+
+<div class="container mt-4">
+
+    <h2 class="text-success">THÊM KHÁCH HÀNG</h2>
+
+    <hr />
+
+    <form asp-action="Create" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Họ tên</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
+            <input asp-for="Password"
+                   type="password"
+                   class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Số điện thoại</label>
+            <input asp-for="Phone" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Địa chỉ</label>
+            <input asp-for="Address" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Lưu
+        </button>
+
+        <a href="/Customers/Index"
+           class="btn btn-secondary">
+
+            Hủy
+
+        </a>
+
+    </form>
+
+</div>
