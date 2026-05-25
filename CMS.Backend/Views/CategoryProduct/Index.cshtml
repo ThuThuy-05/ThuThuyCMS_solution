@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CMS.Data.Entities.CategoryProduct>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="text-primary fw-bold">
+            QUẢN LÝ DANH MỤC SẢN PHẨM
+        </h2>
+        <a href="/CategoryProduct/Create" class="btn btn-success btn-sm"> + Thêm danh mục </a>
+    </div>
+
+    <table class="table table-bordered table-hover shadow-sm align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th width="100" class="text-center">Mã</th>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+                <th width="160" class="text-center">Thao tác</th>
+            </tr
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@item.Id</td>
+                    <td><strong>@item.Name</strong></td>
+                    <td>@(string.IsNullOrEmpty(item.Description) ? "—" : item.Description)</td>
+                    <td class="text-center">
+                        <a href="/CategoryProduct/Edit/@item.Id" class="btn btn-warning btn-sm">Sửa</a>
+                        <a href="/CategoryProduct/Delete/@item.Id" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -5,9 +5,7 @@
     <h2 class="text-success">
         THÊM SẢN PHẨM
     </h2>
-
     <hr />
-
     <form asp-action="Create" method="post">
 
         <div class="mb-3">
@@ -41,35 +39,18 @@
 
         <!-- CATEGORY -->
         <div class="mb-3">
-
             <label>Danh mục sản phẩm</label>
-
             <select asp-for="CategoryProductId"
                     asp-items="ViewBag.CategoryProductId"
                     class="form-select">
-
                 <option value="">
                     -- Chọn danh mục --
                 </option>
-
             </select>
-
         </div>
-
-        <button type="submit"
-                class="btn btn-success">
-
-            Lưu
-
-        </button>
+        <button type="submit"class="btn btn-success">Lưu</button>
 
         <a href="/Products/Index"
-           class="btn btn-secondary">
-
-            Hủy
-
-        </a>
-
+           class="btn btn-secondary">Hủy</a>
     </form>
-
 </div>

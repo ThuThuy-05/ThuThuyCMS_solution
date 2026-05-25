@@ -1,19 +1,23 @@
 ﻿@model IEnumerable<CMS.Data.Entities.User>
 
 <div class="container mt-4">
+
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="text-dark">QUẢN LÝ THÀNH VIÊN</h2>
-        <button class="btn btn-success btn-sm">+ Thêm thành viên mới</button>
+
+        <h2 class="text-dark">
+            QUẢN LÝ THÀNH VIÊN
+        </h2>
+        <a href="/User/Create" class="btn btn-success btn-sm">+ Thêm thành viên</a>
     </div>
 
     <table class="table table-hover shadow-sm border">
         <thead class="table-light">
             <tr>
                 <th>ID</th>
-                <th>Tên Đăng Nhập</th>
-                <th>Họ Và Tên</th>
-                <th>Quyền Hạn</th>
-                <th>Thao Tác</th>
+                <th>Tên đăng nhập</th>
+                <th>Họ và tên</th>
+                <th>Quyền hạn</th>
+                <th width="220">Thao tác</th>
             </tr>
         </thead>
         <tbody>
@@ -34,8 +38,14 @@
                         }
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-outline-warning">Sửa</button>
-                        <button class="btn btn-sm btn-outline-danger">Xóa</button>
+                        <a href="/User/Details/@user.Id"
+                           class="btn btn-outline-primary btn-sm">Chi tiết</a>
+                        <a href="/User/Edit/@user.Id"
+                           class="btn btn-warning btn-sm">Sửa</a>
+                        <a href="/User/Delete/@user.Id"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa không?')">Xóa
+                        </a>
                     </td>
                 </tr>
             }

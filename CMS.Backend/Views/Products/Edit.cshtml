@@ -14,53 +14,37 @@
 
         <div class="mb-3">
             <label>Tên sản phẩm</label>
-            <input asp-for="Name"
-                   class="form-control" />
+            <input asp-for="Name" class="form-control" />
         </div>
 
         <div class="mb-3">
             <label>Mô tả</label>
-            <textarea asp-for="Description"
-                      class="form-control"></textarea>
+            <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
         <div class="mb-3">
             <label>Giá</label>
-            <input asp-for="Price"
-                   class="form-control" />
+            <input asp-for="Price" class="form-control" />
         </div>
 
         <div class="mb-3">
             <label>Tồn kho</label>
-            <input asp-for="StockQuantity"
-                   class="form-control" />
+            <input asp-for="StockQuantity" class="form-control" />
         </div>
-
         <div class="mb-3">
-            <label>Hình ảnh</label>
-            <input asp-for="ImageUrl"
+            <label>Hình ảnh</label> <input asp-for="ImageUrl"
                    class="form-control" />
         </div>
-
         <!-- CATEGORY -->
         <div class="mb-3">
-
             <label>Danh mục sản phẩm</label>
-
             <select asp-for="CategoryProductId"
                     asp-items="ViewBag.CategoryProductId"
                     class="form-select">
             </select>
-
         </div>
-
         <button type="submit"
-                class="btn btn-warning">
-
-            Cập nhật
-
+                class="btn btn-warning"> Cập nhật
         </button>
-
     </form>
-
 </div>

@@ -1,0 +1,14 @@
+﻿@model CMS.Data.Entities.Customer
+
+<div class="container mt-4">
+
+    <h2>CHI TIẾT KHÁCH HÀNG</h2>
+
+    <div class="card p-3 mt-3">
+        <p><b>Họ tên:</b> @Model.FullName</p>
+        <p><b>Email:</b> @Model.Email</p>
+        <p><b>SĐT:</b> @Model.Phone</p>
+        <p><b>Địa chỉ:</b> @Model.Address</p>
+    </div>
+    <a href="/Customers" class="btn btn-secondary mt-3">Quay lại</a>
+</div>

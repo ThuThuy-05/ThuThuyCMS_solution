@@ -6,24 +6,30 @@
 *
 */
 
-
 using CMS.Data;
 using Microsoft.AspNetCore.Mvc;
 
-
-// Controller để quản lý chi tiết đơn hàng
-public class OrderDetailsController : Controller
+namespace CMS.Controllers
 {
-    private readonly ApplicationDbContext _context; // Biến để truy cập dữ liệu từ cơ sở dữ liệu
-
-    public OrderDetailsController(ApplicationDbContext context)
+    // Controller để quản lý chi tiết đơn hàng
+    public class OrderDetailsController : Controller
     {
-        _context = context; // Gán kết nối vào biến để sử dụng trong các phương thức của Controller
-    }
+        private readonly ApplicationDbContext _context;
 
-    public IActionResult Index()
-    {
-        var data = _context.OrderDetails.ToList(); // Truy vấn tất cả các chi tiết đơn hàng từ cơ sở dữ liệu và lưu vào biến data
-        return View(data); // Trả về View và truyền dữ liệu chi tiết đơn hàng vào để hiển thị
+        public OrderDetailsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // Xem chi tiết theo mã đơn hàng
+        public IActionResult Index(int id)
+        {
+            // Lấy các sản phẩm thuộc đơn hàng
+            var data = _context.OrderDetails
+                        .Where(x => x.OrderId == id)
+                        .ToList();
+            // Trả dữ liệu sang View
+            return View(data);
+        }
     }
 }

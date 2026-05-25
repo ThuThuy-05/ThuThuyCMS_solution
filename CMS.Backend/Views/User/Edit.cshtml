@@ -1,0 +1,33 @@
+﻿@model CMS.Data.Entities.User
+
+<div class="container mt-4" style="max-width:700px;">
+
+    <h2 class="text-warning mb-3">
+        CHỈNH SỬA THÀNH VIÊN
+    </h2>
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <input asp-for="Username"
+               class="form-control mb-3"
+               placeholder="Tên đăng nhập" />
+
+        <input asp-for="PasswordHash"
+               class="form-control mb-3"
+               placeholder="Mật khẩu" />
+
+        <input asp-for="FullName"
+               class="form-control mb-3"
+               placeholder="Họ và tên" />
+
+        <input asp-for="Role"
+               class="form-control mb-3"
+               placeholder="Quyền hạn" />
+
+        <button type="submit"class="btn btn-warning">Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+
+</div>

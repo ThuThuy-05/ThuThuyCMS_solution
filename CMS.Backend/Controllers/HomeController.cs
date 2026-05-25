@@ -1,32 +1,36 @@
+﻿/*
+*Sinh vien: Nguyen Thi Thu Thuy
+*Ma sv: 2123110071
+*Ngay tao: 21-05-2026
+*Version: 1.0
+*
+*/
 using CMS.Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace CMS.Backend.Controllers
+using Microsoft.EntityFrameworkCore;
+using CMS.Data; // Thư mục chứa DbContext [cite: 568]
+using System.Linq;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ApplicationDbContext _context;
+    // Constructor để khởi tạo DbContext, giúp truy cập dữ liệu từ cơ sở dữ liệu
+    public HomeController(ApplicationDbContext context)
     {
-        private readonly ILogger<HomeController> _logger;
+        _context = context;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public IActionResult Index()
+    {
+        // LINQ: Lấy 3 bài viết mới nhất
+        var latestPosts = _context.Posts
+            .Include(p => p.Category) // Lấy kèm tên danh mục
+            .OrderByDescending(p => p.CreatedDate) // Mới nhất lên đầu
+            .Take(3)
+            .ToList();
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        return View(latestPosts);
     }
 }

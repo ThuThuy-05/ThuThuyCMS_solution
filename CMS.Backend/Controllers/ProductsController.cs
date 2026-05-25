@@ -29,11 +29,11 @@ public class ProductsController : Controller
         return View(data); // Trả về View và truyền dữ liệu sản phẩm vào để hiển thị
     }
 
-
     // GET
     [HttpGet]
     public IActionResult Create()
     {
+        // Đổ dữ liệu CategoryProduct lên Combobox
         ViewBag.CategoryProductId = new SelectList(
             _context.CategoryProducts,
             "Id",
@@ -47,6 +47,7 @@ public class ProductsController : Controller
     [HttpPost]
     public IActionResult Create(Product model)
     {
+        // Thêm sản phẩm mới vào cơ sở dữ liệu
         _context.Products.Add(model);
 
         _context.SaveChanges();
@@ -62,11 +63,12 @@ public class ProductsController : Controller
     [HttpGet]
     public IActionResult Edit(int id)
     {
+        // Tìm sản phẩm trong Database theo Id
         var product = _context.Products.Find(id);
 
         if (product == null)
             return NotFound();
-
+        // Lấy danh sách CategoryProduct để hiển thị trong dropdown
         ViewBag.CategoryProductId = new SelectList(
             _context.CategoryProducts,
             "Id",
@@ -80,11 +82,11 @@ public class ProductsController : Controller
     [HttpPost]
     public IActionResult Edit(Product model)
     {
-        var product = _context.Products.Find(model.Id);
+        var product = _context.Products.Find(model.Id); // Tìm sản phẩm trong cơ sở dữ liệu dựa trên Id của model được gửi lên
 
         if (product == null)
             return NotFound();
-
+        // Cập nhật các thuộc tính của sản phẩm với giá trị mới từ model
         product.Name = model.Name;
         product.Description = model.Description;
         product.Price = model.Price;

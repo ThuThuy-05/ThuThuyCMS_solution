@@ -2,15 +2,9 @@
 
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between mb-3">
-        <h2 class="text-primary">DANH SÁCH KHÁCH HÀNG</h2>
+    <h2 class="text-primary">DANH SÁCH KHÁCH HÀNG</h2>
 
-        <a href="/Customers/Create" class="btn btn-success">
-            + Thêm khách hàng
-        </a>
-    </div>
-
-    <table class="table table-bordered table-hover shadow-sm">
+    <table class="table table-bordered table-hover mt-3">
 
         <thead class="table-dark">
             <tr>
@@ -18,12 +12,10 @@
                 <th>Email</th>
                 <th>SĐT</th>
                 <th>Địa chỉ</th>
-                <th width="180">Chức năng</th>
+                <th>Hành động</th>
             </tr>
         </thead>
-
         <tbody>
-
             @foreach (var item in Model)
             {
                 <tr>
@@ -31,25 +23,21 @@
                     <td>@item.Email</td>
                     <td>@item.Phone</td>
                     <td>@item.Address</td>
-
                     <td>
-                        <a href="/Customers/Edit/@item.Id"
-                           class="btn btn-warning btn-sm">
-                            Sửa
+                        <!-- ✅ XEM -->
+                        <a href="/Customers/Details/@item.Id"
+                           class="btn btn-info btn-sm">
+                            Xem
                         </a>
-
+                        <!-- ❌ XÓA -->
                         <a href="/Customers/Delete/@item.Id"
                            class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc muốn xóa không?')">
+                           onclick="return confirm('Xóa khách hàng này?')">
                             Xóa
                         </a>
                     </td>
-
                 </tr>
             }
-
         </tbody>
-
     </table>
-
 </div>
