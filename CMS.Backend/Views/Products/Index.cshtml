@@ -1,35 +1,51 @@
 ﻿@model List<CMS.Data.Entities.Product>
 
+@{
+    Layout = "_LayoutAdmin";
+}
+
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between mb-3">
+        <h2 class="text-dark">DANH SÁCH SẢN PHẨM</h2>
 
-        <h2 class="text-primary">
-            DANH SÁCH SẢN PHẨM
-        </h2>
-        <a href="/Products/Create" class="btn btn-success">+ Thêm sản phẩm</a>
+        <a href="/Products/Create" class="btn btn-success">
+            + Thêm sản phẩm
+        </a>
     </div>
-    <table class="table table-bordered table-hover shadow-sm">
+
+    <table class="table table-hover table-bordered shadow-sm">
         <thead class="table-dark">
             <tr>
-                <th>Tên sản phẩm</th>
+                <th>Hình ảnh</th>
+                <th>Tên</th>
                 <th>Giá</th>
                 <th>Tồn kho</th>
                 <th>Mô tả</th>
-                <th width="180">Chức năng</th>
+                <th width="180">Thao tác</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@item.Name</td>
+                <tr>            
+                    <td> <img src="@item.ImageUrl" width="70" height="70"
+                             style="object-fit:cover; border-radius:6px;" />
+                    </td>
+                    <td><strong>@item.Name</strong></td>
                     <td>@item.Price</td>
                     <td>@item.StockQuantity</td>
                     <td>@item.Description</td>
-                    <td><a href="/Products/Edit/@item.Id" class="btn btn-warning btn-sm">Sửa</a>
-                        <a href="/Products/Delete/@item.Id" class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc muốn xóa không?')">Xóa</a>
+                    <td>
+                        <a href="/Products/Edit/@item.Id"
+                           class="btn btn-warning btn-sm">Sửa</a>
+
+                        <a href="/Products/Delete/@item.Id"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa không?')">
+                            Xóa
+                        </a>
                     </td>
                 </tr>
             }

@@ -1,32 +1,60 @@
 ﻿@model CMS.Data.Entities.Post
 
-<div class="container mt-4" style="max-width:700px;">
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm bài viết mới";
+}
 
-    <h2 class="text-success mb-3">
-        THÊM BÀI VIẾT MỚI
-    </h2>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-file-earmark-plus"></i> THÊM BÀI VIẾT MỚI</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tiêu đề bài viết:</label>
+                            <input asp-for="Title" class="form-control" placeholder="Nhập tiêu đề..." />
+                        </div>
 
-    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nội dung chi tiết:</label>
+                            <textarea asp-for="Content" class="form-control" rows="10" placeholder="Viết nội dung tại đây..."></textarea>
+                        </div>
+                    </div>
 
-        <input asp-for="Title" class="form-control mb-3" placeholder="Tiêu đề bài viết" />
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Chuyên mục:</label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryList">
+                                <option value="">-- Chọn danh mục --</option>
+                            </select>
+                        </div>
 
-        <textarea asp-for="Content" class="form-control mb-3" rows="5" placeholder="Nội dung"></textarea>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Chọn ảnh:</label>
+                            <input type="file" name="uploadImage" class="form-control" />
+                        </div>
 
-        <input asp-for="ImageUrl" class="form-control mb-3" placeholder="Hình ảnh" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ngày đăng:</label>
+                            <input asp-for="CreatedDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </div>
 
-        <input asp-for="CreatedDate" type="date" class="form-control mb-3" />
-
-        <select asp-for="CategoryId" asp-items="ViewBag.CategoryId" class="form-select mb-3">
-
-            <option value="">
-                -- Chọn danh mục --
-            </option>
-        </select>
-        <button type="submit" class="btn btn-success">
-            Lưu bài viết
-        </button>
-        <a asp-action="Index" class="btn btn-secondary">
-            Hủy
-        </a>
-    </form>
+                        <hr />
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-cloud-arrow-up"></i> Lưu và Đăng bài
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

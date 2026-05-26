@@ -1,30 +1,71 @@
 ﻿@model CMS.Data.Entities.Post
 
-<div class="container mt-4" style="max-width:700px;">
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Sửa bài viết";
+}
 
-    <h2 class="text-warning mb-3">
-        CHỈNH SỬA BÀI VIẾT
-    </h2>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">SỬA BÀI VIẾT</h4>
+        </div>
 
-    <form asp-action="Edit" method="post">
+        <div class="card-body">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
 
-        <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
 
-        <input asp-for="Title" class="form-control mb-3" placeholder="Tiêu đề bài viết" />
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label"></label>
+                    <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
 
-        <textarea asp-for="Content" class="form-control mb-3" rows="5" placeholder="Nội dung"></textarea>
+                <div class="mb-3">
+                    <label asp-for="CategoryId" class="form-label"></label>
+                    <select asp-for="CategoryId"
+                            asp-items="ViewBag.CategoryList"
+                            class="form-select">
+                        <option value="">-- Chọn danh mục --</option>
+                    </select>
+                </div>
 
-        <input asp-for="ImageUrl" class="form-control mb-3" placeholder="Hình ảnh" />
+                <div class="mb-3">
+                    <label class="form-label">Chọn ảnh mới</label>
+                    <input type="file" name="uploadImage" class="form-control" />
 
-        <input asp-for="CreatedDate" type="date" class="form-control mb-3" />
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" width="150" class="mt-2" />
+                    }
+                </div>
 
-        <select asp-for="CategoryId" asp-items="ViewBag.CategoryId" class="form-select mb-3"></select>
+                <div class="mb-3">
+                    <label asp-for="CreatedDate" class="form-label"></label>
+                    <input asp-for="CreatedDate" type="date" class="form-control" />
+                </div>
 
-        <button type="submit" class="btn btn-warning">
-            Cập nhật
-        </button>
-        <a asp-action="Index" class="btn btn-secondary">
-            Hủy
-        </a>
-    </form>
+                <button type="submit" class="btn btn-success">
+                    Cập nhật
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Quay lại
+                </a>
+
+            </form>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -11,6 +11,7 @@ using CMS.Data;
 using CMS.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 // Controller để quản lý sản phẩm
 public class ProductsController : Controller
@@ -25,8 +26,11 @@ public class ProductsController : Controller
     // Phương thức hiển thị danh sách sản phẩm
     public IActionResult Index()
     {
-        var data = _context.Products.ToList(); // Truy vấn tất cả các sản phẩm từ cơ sở dữ liệu và lưu vào biến data    
-        return View(data); // Trả về View và truyền dữ liệu sản phẩm vào để hiển thị
+        var data = _context.Products
+            .Include(x => x.CategoryProduct)
+            .ToList();
+
+        return View(data);
     }
 
     // GET
@@ -43,13 +47,30 @@ public class ProductsController : Controller
         return View();
     }
 
-    // POST
+    //POST
     [HttpPost]
-    public IActionResult Create(Product model)
+    public IActionResult Create(Product model, IFormFile uploadImage)
     {
-        // Thêm sản phẩm mới vào cơ sở dữ liệu
-        _context.Products.Add(model);
+        if (uploadImage != null && uploadImage.Length > 0)
+        {
+            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
+
+            string filePath = Path.Combine(folder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                uploadImage.CopyTo(stream);
+            }
+
+            model.ImageUrl = "/uploads/" + fileName;
+        }
+
+        _context.Products.Add(model);
         _context.SaveChanges();
 
         return RedirectToAction("Index");
@@ -80,19 +101,37 @@ public class ProductsController : Controller
 
     // POST
     [HttpPost]
-    public IActionResult Edit(Product model)
+    public IActionResult Edit(Product model, IFormFile uploadImage)
     {
-        var product = _context.Products.Find(model.Id); // Tìm sản phẩm trong cơ sở dữ liệu dựa trên Id của model được gửi lên
+        var product = _context.Products.Find(model.Id);
 
         if (product == null)
             return NotFound();
-        // Cập nhật các thuộc tính của sản phẩm với giá trị mới từ model
+
         product.Name = model.Name;
         product.Description = model.Description;
         product.Price = model.Price;
         product.StockQuantity = model.StockQuantity;
-        product.ImageUrl = model.ImageUrl;
         product.CategoryProductId = model.CategoryProductId;
+
+        if (uploadImage != null && uploadImage.Length > 0)
+        {
+            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
+
+            string filePath = Path.Combine(folder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                uploadImage.CopyTo(stream);
+            }
+
+            product.ImageUrl = "/uploads/" + fileName;
+        }
 
         _context.SaveChanges();
 
