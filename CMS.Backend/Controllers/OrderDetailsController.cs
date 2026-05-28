@@ -21,15 +21,25 @@ namespace CMS.Controllers
             _context = context;
         }
 
-        // Xem chi tiết theo mã đơn hàng
-        public IActionResult Index(int id)
+        // DANH SÁCH CHI TIẾT ĐƠN HÀNG
+        public IActionResult Index()
         {
-            // Lấy các sản phẩm thuộc đơn hàng
-            var data = _context.OrderDetails
-                        .Where(x => x.OrderId == id)
-                        .ToList();
-            // Trả dữ liệu sang View
-            return View(data);
+            var orderDetails = _context.OrderDetails.ToList();
+
+            return View(orderDetails);
+        }
+
+        // CHI TIẾT
+        public IActionResult Details(int id)
+        {
+            var orderDetail = _context.OrderDetails.Find(id);
+
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+
+            return View(orderDetail);
         }
     }
 }

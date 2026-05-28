@@ -6,15 +6,37 @@
 
 <div class="container mt-4">
 
-    <h2 class="text-dark">CHI TIẾT KHÁCH HÀNG</h2>
+    <div class="card shadow">
 
-    <div class="card shadow-sm p-3 mt-3">
+        <div class="card-header bg-info text-white">
+            <h5>CHI TIẾT KHÁCH HÀNG</h5>
+        </div>
 
-        <p><b>Họ tên:</b> @Model.FullName</p>
-        <p><b>Email:</b> @Model.Email</p>
-        <p><b>SĐT:</b> @Model.Phone</p>
-        <p><b>Địa chỉ:</b> @Model.Address</p>
+        <div class="card-body">
+
+            <p><strong>ID:</strong> @Model.Id</p>
+
+            <p><strong>Họ tên:</strong> @Model.FullName</p>
+
+            <p><strong>Email:</strong> @Model.Email</p>
+
+            <p><strong>SĐT:</strong> @Model.Phone</p>
+
+            <p><strong>Địa chỉ:</strong> @Model.Address</p>
+
+            <p>
+                <strong>Số đơn hàng:</strong>
+
+                @(Model.Orders != null ? Model.Orders.Count : 0)
+            </p>
+
+            <a href="/Customers"
+               class="btn btn-secondary">
+                Quay lại
+            </a>
+
+        </div>
+
     </div>
 
-    <a href="/Customers" class="btn btn-secondary mt-3"> Quay lại</a>
 </div>
