@@ -1,4 +1,5 @@
 BUỔI 4: XÂY DỰNG GIAO DIỆN QUẢN TRỊ (ADMIN PANEL) TOÀN DIỆN
+
 Mục tiêu buổi học
 Buổi 4 tập trung xây dựng hệ thống quản trị (Admin Panel) hoàn chỉnh cho dự án CMS bằng ASP.NET Core MVC. Sinh viên thực hành thiết kế giao diện quản trị chuyên nghiệp, xây dựng chức năng quản lý dữ liệu và thao tác CRUD theo mô hình MVC.
 1. Xây dựng Layout quản trị (_LayoutAdmin.cshtml)
