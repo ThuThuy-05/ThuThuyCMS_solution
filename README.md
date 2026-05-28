@@ -1,4 +1,5 @@
 BUỔI 1: KHỞI TẠO CẤU TRÚC ĐỒ ÁN TỐT NGHIỆP CMS FULL-STACK
+
 Mục tiêu buổi học
 Buổi 1 tập trung xây dựng nền tảng ban đầu cho hệ thống CMS Full-Stack bằng ASP.NET Core MVC và ReactJS. Sinh viên thực hành tạo cấu trúc Solution 3 lớp gồm Data, 
 Backend và Frontend, đồng thời xây dựng các thực thể dữ liệu và hiểu mối quan hệ giữa các bảng trong Database.
