@@ -13,6 +13,7 @@ Thực hiện:
 •	Thêm dữ liệu (Create)
 •	Xóa dữ liệu (Delete)
 •	Sửa dữ liệu (Update)
+
 2. LINQ – Truy vấn dữ liệu
 2.1. Lọc dữ liệu bằng Where()
 Ví dụ:
@@ -42,6 +43,7 @@ Nếu không có → trả về null.
 .Ta
 Ý nghĩa:
 Chỉ lấy 3 bài viết đầu tiên.
+
 3. CRUD – Thao tác dữ liệu
 3.1. CREATE – Thêm dữ liệu
 Hàm GET
@@ -104,6 +106,7 @@ Quan trọng
 <input type="hidden" asp-for="Id" />
  Không được quên:
 Nếu thiếu → hệ thống không biết sửa dòng nào.
+
 4. Kiến thức quan trọng cần nhớ
 Công thức LINQ tổng quát
 var data = _context.TableName
@@ -111,6 +114,7 @@ var data = _context.TableName
             .OrderBy(...)
             .Include(...)
             .ToList();
+
 5. Kiến thức trọng tâm của buổi
 •	LINQ
 •	Where() → Lọc
@@ -123,6 +127,7 @@ var data = _context.TableName
 •	Update() → Sửa
 •	Remove() → Xóa
 •	SaveChanges() → Lưu thật xuống Database
+
 6. Kết quả đạt được sau buổi học
 Sau buổi 3 mình có thể:
 •	Truy vấn dữ liệu bằng LINQ.
