@@ -1,6 +1,7 @@
 BUỔI 3: TRUY VẤN LINQ & THAO TÁC DỮ LIỆU CHUYÊN SÂU
 
-1. Mục tiêu chính của buổi học
+1.	Mục tiêu chính của buổi học
+
 Buổi này tập trung vào 2 phần quan trọng:
 •	LINQ trong Entity Framework Core
 •	Lọc dữ liệu bằng Where()
@@ -14,7 +15,8 @@ Thực hiện:
 •	Xóa dữ liệu (Delete)
 •	Sửa dữ liệu (Update)
 
-2. LINQ – Truy vấn dữ liệu
+2.	LINQ – Truy vấn dữ liệu
+
 2.1. Lọc dữ liệu bằng Where()
 Ví dụ:
 var posts = _context.Posts
@@ -22,10 +24,12 @@ var posts = _context.Posts
     .ToList();
 Ý nghĩa:
 Chỉ lấy bài viết thuộc danh mục có CategoryId = id.
+
 2.2. Sắp xếp dữ liệu bằng OrderByDescending()
 .OrderByDescending(p => p.CreatedDate)
 Ý nghĩa:
 Bài viết mới nhất hiển thị đầu tiên.
+
 2.3. Join bảng bằng Include()
 .Include(p => p.Category)
 Ý nghĩa:
@@ -34,17 +38,20 @@ Giúp dùng được:
 @item.Category.Name
 Nếu không có Include():
 Category.Name sẽ bị null.
+
 2.4. Lấy 1 dòng dữ liệu bằng FirstOrDefault()
 .FirstOrDefault(p => p.Id == id)
 Ý nghĩa:
 Lấy bài viết đầu tiên đúng điều kiện.
 Nếu không có → trả về null.
+
 2.5. Lấy giới hạn dữ liệu bằng Take()
 .Ta
 Ý nghĩa:
 Chỉ lấy 3 bài viết đầu tiên.
 
-3. CRUD – Thao tác dữ liệu
+3.	CRUD – Thao tác dữ liệu
+
 3.1. CREATE – Thêm dữ liệu
 Hàm GET
 [HttpGet]
@@ -71,6 +78,7 @@ _context.SaveChanges();
 Ghi thật xuống SQL Server.
 ⚠ Nếu thiếu SaveChanges():
 Dữ liệu sẽ KHÔNG được lưu.
+
 3.2. DELETE – Xóa dữ liệu
 public IActionResult Delete(int id)
 {
@@ -86,6 +94,7 @@ Quy trình xóa gồm 3 bước
 Tìm dữ liệu bằng Find(id)
 Xóa tạm bằng Remove()
 Xóa thật bằng SaveChanges()
+
 3.3. UPDATE – Sửa dữ liệu
 GET: Hiển thị dữ liệu cũ
 [HttpGet]
@@ -116,6 +125,7 @@ var data = _context.TableName
             .ToList();
 
 5. Kiến thức trọng tâm của buổi
+
 •	LINQ
 •	Where() → Lọc
 •	OrderByDescending() → Sắp xếp giảm dần
@@ -129,6 +139,7 @@ var data = _context.TableName
 •	SaveChanges() → Lưu thật xuống Database
 
 6. Kết quả đạt được sau buổi học
+
 Sau buổi 3 mình có thể:
 •	Truy vấn dữ liệu bằng LINQ.
 •	Join nhiều bảng bằng Include().
