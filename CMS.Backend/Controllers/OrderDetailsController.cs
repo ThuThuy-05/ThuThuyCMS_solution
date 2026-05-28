@@ -7,10 +7,12 @@
 */
 
 using CMS.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMS.Controllers
 {
+    [Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
     // Controller để quản lý chi tiết đơn hàng
     public class OrderDetailsController : Controller
     {

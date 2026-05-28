@@ -6,10 +6,12 @@
 *
 */
 
-using CMS.Data.Entities; // Kết nối tới lớp dữ liệu bạn vừa tạo
-using Microsoft.AspNetCore.Mvc;
 using CMS.Data;
+using CMS.Data.Entities; // Kết nối tới lớp dữ liệu bạn vừa tạo
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
+[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
 // Controller để quản lý danh mục sản phẩm
 public class CategoryController : Controller
 {

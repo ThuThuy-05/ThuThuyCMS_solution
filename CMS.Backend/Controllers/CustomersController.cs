@@ -8,8 +8,11 @@
 
 using CMS.Data;
 using CMS.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
 
 public class CustomersController : Controller
 {

@@ -8,9 +8,10 @@
 
 using CMS.Data;
 using CMS.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
+[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
 // Controller để quản lý đơn hàng
 public class OrdersController : Controller
 {

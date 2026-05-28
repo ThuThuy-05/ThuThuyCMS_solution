@@ -6,13 +6,14 @@
 *
 */
 using CMS.Backend.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-using Microsoft.EntityFrameworkCore;
 using CMS.Data; // Thư mục chứa DbContext [cite: 568]
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq;
 
+[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
 public class HomeController : Controller
 {
     private readonly ApplicationDbContext _context;

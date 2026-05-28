@@ -9,10 +9,12 @@
 
 using CMS.Data;
 using CMS.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
 // Controller để quản lý sản phẩm
 public class ProductsController : Controller
 {
