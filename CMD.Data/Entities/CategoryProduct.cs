@@ -25,5 +25,7 @@ namespace CMS.Data.Entities
 
         // Một danh mục có nhiều sản phẩm
         public virtual ICollection<Product>? Products { get; set; }
+        public int DisplayOrder { get; set; }
+        public bool IsActive { get; set; }
     }
 }

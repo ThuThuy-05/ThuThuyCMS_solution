@@ -1,160 +1,68 @@
-﻿/*
-*Sinh vien: Nguyen Thi Thu Thuy
-*Ma sv: 2123110071
-*Ngay tao: 14-05-2026
-*Version: 1.0
-*
-*/
-
-
-using CMS.Data;
-using CMS.Data.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CMS.Data;
 
-[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
-// Controller để quản lý sản phẩm
-public class ProductsController : Controller
+namespace CMS.Backend.Controllers
 {
-    private readonly ApplicationDbContext _context; // Biến để truy cập dữ liệu từ cơ sở dữ liệu
+    // 1. Định nghĩa đường dẫn để gọi API. [controller] sẽ tự lấy tên là "Categories"
+    // Khi chạy, địa chỉ truy cập dữ liệu sẽ là: https://localhost:xxxx/api/categories
+    [Route("api/[controller]")]
 
-    public ProductsController(ApplicationDbContext context)
+    // 2. Đánh dấu đây là một API Controller để hệ thống hỗ trợ các tính năng tự động kiểm tra dữ liệu đầu vào
+    [ApiController]
+
+    // 3. API Controller phải kế thừa từ ControllerBase (thay vì kế thừa từ Controller như phân hệ MVC)
+    public class ProductsController : ControllerBase
     {
-        _context = context; // Gán kết nối vào biến để sử dụng trong các phương thức của Controller
-    }
+        private readonly ApplicationDbContext _context;
 
-    // Phương thức hiển thị danh sách sản phẩm
-    public IActionResult Index()
-    {
-        var data = _context.Products
-            .Include(x => x.CategoryProduct)
-            .ToList();
-
-        return View(data);
-    }
-
-    // GET
-    [HttpGet]
-    public IActionResult Create()
-    {
-        // Đổ dữ liệu CategoryProduct lên Combobox
-        ViewBag.CategoryProductId = new SelectList(
-            _context.CategoryProducts,
-            "Id",
-            "Name"
-        );
-
-        return View();
-    }
-
-    //POST
-    [HttpPost]
-    public IActionResult Create(Product model, IFormFile uploadImage)
-    {
-        if (uploadImage != null && uploadImage.Length > 0)
+        // 4. Hàm khởi tạo (Constructor): "Tiêm" ngữ cảnh dữ liệu SQL Server vào để sử dụng
+        public ProductsController(ApplicationDbContext context)
         {
-            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            _context = context;
+        }
 
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
+        // 1. Chỉ định phương thức GET (Dùng để kéo dữ liệu từ cơ sở dữ liệu)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            // Lấy toàn bộ dữ liệu từ bảng Products số nhiều trong SQL Server
+            var products = await _context.Products
+                .OrderByDescending(p => p.Id) // Sắp xếp sản phẩm mới nhất lên đầu
+                .ToListAsync();
 
-            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
+            // Trả về kết quả cho Frontend kèm mã trạng thái HTTP 200 OK (Thành công)
+            return Ok(products);
+        }
 
-            string filePath = Path.Combine(folder, fileName);
+        // 2. Định nghĩa đường dẫn chứa tham số động: api/products/categoryproduct/{categoryproductId}
+        [HttpGet("categoryproduct/{categoryProductId}")]
+        public async Task<IActionResult> GetByCategoryProduct(int categoryProductId)
+        {
+            // Lọc các bài viết có CategoryId trùng với ID truyền vào từ thanh URL
+            var products = await _context.Products
+                .Where(p => p.CategoryProductId == categoryProductId)
+                .ToListAsync();
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            return Ok(products);
+        }
+        // 3. Định nghĩa đường dẫn nhận ID trực tiếp: api/products/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetail(int id)
+        {
+            // 3.1. Quét bảng Products để tìm sản phẩm đầu tiên có Id khớp với tham số
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            // 3.2 Xử lý kịch bản lỗi bảo vệ hệ thống: ID không tồn tại trong Database
+            if (product == null)
             {
-                uploadImage.CopyTo(stream);
+                // Trả về mã lỗi 404 kèm một "gói tin" JSON thông báo nhỏ gọn để Frontend tự xử lý UI
+                return NotFound(new { message = "Không tìm thấy sản phẩm này trong hệ thống" });
             }
 
-            model.ImageUrl = "/uploads/" + fileName;
+            // 3.3. Trả về toàn bộ đối tượng sản phẩm (bao gồm cả trường Content chứa mã HTML) kèm mã 200 OK
+            return Ok(product);
         }
-
-        _context.Products.Add(model);
-        _context.SaveChanges();
-
-        return RedirectToAction("Index");
     }
-
-    // =========================
-    // SỬA
-    // =========================
-
-    // GET
-    [HttpGet]
-    public IActionResult Edit(int id)
-    {
-        // Tìm sản phẩm trong Database theo Id
-        var product = _context.Products.Find(id);
-
-        if (product == null)
-            return NotFound();
-        // Lấy danh sách CategoryProduct để hiển thị trong dropdown
-        ViewBag.CategoryProductId = new SelectList(
-            _context.CategoryProducts,
-            "Id",
-            "Name"
-        );
-
-        return View(product);
-    }
-
-    // POST
-    [HttpPost]
-    public IActionResult Edit(Product model, IFormFile uploadImage)
-    {
-        var product = _context.Products.Find(model.Id);
-
-        if (product == null)
-            return NotFound();
-
-        product.Name = model.Name;
-        product.Description = model.Description;
-        product.Price = model.Price;
-        product.StockQuantity = model.StockQuantity;
-        product.CategoryProductId = model.CategoryProductId;
-
-        if (uploadImage != null && uploadImage.Length > 0)
-        {
-            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-
-            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
-
-            string filePath = Path.Combine(folder, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                uploadImage.CopyTo(stream);
-            }
-
-            product.ImageUrl = "/uploads/" + fileName;
-        }
-
-        _context.SaveChanges();
-
-        return RedirectToAction("Index");
-    }
-
-    // =========================
-    // XÓA
-    // =========================
-    public IActionResult Delete(int id)
-    {
-        var product = _context.Products.Find(id);
-
-        if (product != null)
-        {
-            _context.Products.Remove(product);
-
-            _context.SaveChanges();
-        }
-
-        return RedirectToAction("Index");
-    }
-
 }
