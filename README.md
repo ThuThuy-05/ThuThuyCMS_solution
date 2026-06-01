@@ -4,19 +4,13 @@
 
 ---
 
-## 👨‍🎓 THÔNG TIN THỰC HIỆN
-
-| Nội dung | Thông tin |
-|-----------|-----------|
-| Họ và tên sinh viên | Nguyễn Thị Thu Thủy |
-| Mã số sinh viên | 2123110071 |
-| Môn học | Chuyên Đề ASP.NET Core |
-| Giảng viên hướng dẫn | ThS. Nguyễn Thái Sơn |
-| Trường | Cao đẳng Công Thương Thành phố Hồ Chí Minh |
-| Năm học | 2026 |
-| Công nghệ sử dụng | ASP.NET Core MVC, ASP.NET Core Web API, Entity Framework Core, SQL Server |
-
----
+## 👤 SINH VIÊN THỰC HIỆN
+- **Họ và tên:** Nguyễn Thị Thu Thủy
+- **Mã số sinh viên:** 2123110071
+- **Môn học:** Chuyên Đề ASP.NET Core
+- **Giảng viên hướng dẫn:** ThS. Nguyễn Thái Sơn
+- **Trường:** Cao đẳng Công Thương Thành phố Hồ Chí Minh
+- **Năm học:** 2026 - **Công nghệ sử dụng:** ASP.NET Core MVC, Entity Framework Core, SQL Server,.. ---
 
 ## 📖 GIỚI THIỆU ĐỀ TÀI
 
