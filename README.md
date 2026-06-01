@@ -8,7 +8,7 @@
 - **Họ và tên:** Nguyễn Thị Thu Thủy
 - **Mã số sinh viên:** 2123110071
 - **Môn học:** Chuyên Đề ASP.NET Core
-- **Giảng viên hướng dẫn:** ThS. Nguyễn Thái Sơn
+- **Giảng viên hướng dẫn:** ThS. Nguyễn Cao Thái
 - **Trường:** Cao đẳng Công Thương Thành phố Hồ Chí Minh
 - **Năm học:** 2026 - **Công nghệ sử dụng:** ASP.NET Core MVC, Entity Framework Core, SQL Server,.. ---
 
