@@ -42,9 +42,9 @@ Hệ thống cho phép quản lý nhiều đối tượng dữ liệu khác nhau
 | Visual Studio 2022 | Môi trường phát triển |
 | ASP.NET Core MVC | Xây dựng ứng dụng Web |
 | ASP.NET Core Web API | Xây dựng API |
+| ReactJS | Xây dựng giao diện Frontend hiện đại |
 | Swagger / OpenAPI | Kiểm thử và tài liệu hóa API |
-| C# | Ngôn ngữ lập trình |
-| Entity Framework Core | ORM |
+| Entity Framework Core | ORM kết nối và thao tác cơ sở dữ liệu |
 | SQL Server | Hệ quản trị cơ sở dữ liệu |
 | SQL Server Management Studio 19 | Quản lý cơ sở dữ liệu |
 | LINQ | Truy vấn dữ liệu |
