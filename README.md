@@ -1,40 +1,225 @@
-BUỔI 4: XÂY DỰNG GIAO DIỆN QUẢN TRỊ (ADMIN PANEL) TOÀN DIỆN
+### 🌿 Buổi 05: Bảo Mật & Phân Quyền (Security & Identity)
 
-Mục tiêu buổi học
-Buổi 4 tập trung xây dựng hệ thống quản trị (Admin Panel) hoàn chỉnh cho dự án CMS bằng ASP.NET Core MVC. Sinh viên thực hành thiết kế giao diện quản trị chuyên nghiệp, xây dựng chức năng quản lý dữ liệu và thao tác CRUD theo mô hình MVC.
-1. Xây dựng Layout quản trị (_LayoutAdmin.cshtml)
-- Tạo file _LayoutAdmin.cshtml trong Views/Shared
-- Thiết kế giao diện quản trị bằng Bootstrap
-- Xây dựng Sidebar điều hướng gồm: Dashboard, Danh mục, Bài viết, Thành viên, Danh mục sản phẩm, Sản phẩm, Khách hàng, Đơn hàng, Chi tiết đơn hàng
-- Sử dụng Razor Layout, Bootstrap Grid System, Bootstrap Icons và Tag Helper.
-2. Quản trị Danh mục (Category Management)
-- Hiển thị danh sách danh mục
-- Thêm, sửa, xóa danh mục
-- Thực hành CRUD với Entity Framework Core.
-3. Quản trị Bài viết (Post Management)
-- Hiển thị bài viết dạng Card gồm ảnh, tiêu đề, nội dung, ngày đăng,...
-- Thêm mới bài viết bằng Form MVC
-- Upload ảnh bằng IFormFile và lưu vào wwwroot/uploads
-- Dùng Guid.NewGuid() tránh trùng tên file
-- Sửa bài viết và giữ lại ảnh cũ bằng AsNoTracking()
-- Xóa bài viết bằng quy trình Find → Remove → SaveChanges.
-4. Tích hợp CKEditor 5
-- Tích hợp CKEditor bằng CDN
-- Hỗ trợ soạn thảo nội dung nâng cao
-- Hiển thị nội dung HTML bằng Html.Raw().
-5. Quản trị Thành viên (User Management)
-- Hiển thị danh sách thành viên
-- Thêm, sửa, xóa User
-- Phân quyền Admin và Editor
-- Kiểm tra Username tồn tại
-- Giữ mật khẩu cũ nếu không nhập mật khẩu mới.
-6. Quản trị Danh mục sản phẩm và Sản phẩm
-- CRUD danh mục sản phẩm
-- CRUD sản phẩm
-- Upload ảnh sản phẩm và liên kết với danh mục.
-7. Quản trị Khách hàng và Đơn hàng
-- Quản lý khách hàng
-- Quản lý đơn hàng và chi tiết đơn hàng
-- Hiển thị dữ liệu liên kết bằng Entity Framework Core.
-Kết quả sau buổi học
-Sau buổi 4, hệ thống CMS đã có giao diện quản trị hoàn chỉnh, hỗ trợ CRUD dữ liệu, upload hình ảnh, soạn thảo nội dung bằng CKEditor và phân quyền Admin/Editor, sẵn sàng cho phần Authentication và Authorization ở buổi tiếp theo.
+#### 🎯 Mục tiêu buổi học
+
+Buổi học tập trung xây dựng hệ thống bảo mật cho CMS bằng ASP.NET Core MVC, bao gồm:
+
+- Authentication (Xác thực người dùng)
+- Authorization (Phân quyền người dùng)
+- Cookie Authentication
+- Role-Based Authorization
+- Quản lý đăng nhập và đăng xuất
+- Bảo vệ các trang quản trị
+
+---
+
+#### 1️⃣ Tìm Hiểu Luồng Đăng Nhập (Login Flow)
+
+Quy trình hoạt động của hệ thống:
+
+1. Người dùng nhập Username và Password.
+2. Hệ thống kiểm tra thông tin trong Database.
+3. Nếu hợp lệ, hệ thống tạo Cookie xác thực.
+4. Người dùng được cấp quyền truy cập khu vực quản trị.
+
+---
+
+#### 2️⃣ Cấu Hình Cookie Authentication
+
+Trong file `Program.cs`:
+
+- Đăng ký dịch vụ Authentication.
+- Sử dụng Cookie Authentication.
+- Thiết lập trang Login.
+- Thiết lập trang Access Denied.
+
+Đồng thời kích hoạt Middleware:
+
+```csharp
+app.UseAuthentication();
+app.UseAuthorization();
+```
+
+---
+
+#### 3️⃣ Xây Dựng Chức Năng Đăng Nhập
+
+##### AccountController
+
+Tạo `AccountController` để quản lý:
+
+- Login
+- Logout
+- Access Denied
+
+##### Giao Diện Login
+
+Xây dựng trang:
+
+```text
+/Account/Login
+```
+
+Sử dụng:
+
+- Razor View
+- Bootstrap 5
+- Form đăng nhập
+
+Người dùng nhập:
+
+- Username
+- Password
+
+---
+
+#### 4️⃣ Xử Lý Xác Thực Người Dùng
+
+Hệ thống:
+
+- Kiểm tra tài khoản trong bảng Users.
+- Tạo Claims chứa thông tin người dùng.
+- Tạo Identity và Principal.
+- Lưu Cookie Authentication vào trình duyệt.
+
+Thông tin được lưu:
+
+- Username
+- FullName
+- Role (Admin hoặc Editor)
+
+---
+
+#### 5️⃣ Đăng Xuất Hệ Thống
+
+Thực hiện:
+
+- Xóa Cookie Authentication.
+- Chuyển về trang Login.
+
+Giúp kết thúc phiên làm việc an toàn.
+
+---
+
+#### 6️⃣ Các Khái Niệm Quan Trọng
+
+##### Claim
+
+Là thông tin của người dùng:
+
+- Tên đăng nhập
+- Họ tên
+- Vai trò
+
+##### Identity
+
+Là tập hợp các Claim.
+
+##### Principal
+
+Đại diện cho người dùng đang đăng nhập trong hệ thống.
+
+---
+
+#### 7️⃣ Bảo Vệ Khu Vực Quản Trị
+
+Sử dụng thuộc tính:
+
+```csharp
+[Authorize]
+```
+
+Áp dụng cho:
+
+- CategoryController
+- PostController
+- UserController
+- Các Controller quản trị khác
+
+Kết quả:
+
+- Người chưa đăng nhập không thể truy cập.
+- Hệ thống tự động chuyển về trang Login.
+
+---
+
+#### 8️⃣ Phân Quyền Theo Vai Trò (Role-Based Authorization)
+
+Sử dụng:
+
+```csharp
+[Authorize(Roles = "Admin")]
+```
+
+Áp dụng cho:
+
+- UserController
+
+Quyền truy cập:
+
+| Vai trò | Quyền |
+|----------|----------|
+| Admin | Truy cập toàn bộ hệ thống |
+| Editor | Chỉ quản lý nội dung được cấp phép |
+
+---
+
+#### 9️⃣ Hiển Thị Thông Tin Người Đăng Nhập
+
+Trên giao diện quản trị:
+
+- Hiển thị FullName.
+- Hiển thị Role.
+- Hiển thị nút Đăng xuất.
+
+Ví dụ:
+
+```text
+Chào, Nguyễn Thị Thu Thủy (Admin)
+```
+
+---
+
+#### 🔟 Xử Lý Access Denied
+
+Tạo trang:
+
+```text
+/Account/AccessDenied
+```
+
+Hiển thị thông báo:
+
+```text
+403 - KHÔNG CÓ QUYỀN TRUY CẬP
+```
+
+Khi người dùng cố truy cập vào khu vực không được phép.
+
+---
+
+#### 📚 Kiến Thức Đạt Được
+
+- Authentication bằng Cookie.
+- Authorization bằng thuộc tính Authorize.
+- Role-Based Authorization.
+- Claims, Identity và Principal.
+- Quản lý Login và Logout.
+- Bảo vệ khu vực Admin.
+- Xử lý Access Denied.
+- Hiển thị thông tin người dùng trên Layout.
+
+---
+
+#### ✅ Kết Quả Đạt Được
+
+Sau buổi học, hệ thống CMS đã được tích hợp cơ chế bảo mật hoàn chỉnh:
+
+- Đăng nhập và đăng xuất bằng Cookie Authentication.
+- Quản lý phiên đăng nhập.
+- Bảo vệ các khu vực quản trị.
+- Phân quyền Admin và Editor.
+- Hiển thị thông tin người dùng đang đăng nhập.
+- Ngăn chặn truy cập trái phép vào hệ thống.
+
+Đây là nền tảng quan trọng để triển khai các chức năng bảo mật nâng cao và phát triển hệ thống quản trị chuyên nghiệp trong các giai đoạn tiếp theo.
