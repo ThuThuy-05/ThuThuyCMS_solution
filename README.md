@@ -1,48 +1,54 @@
-# 📘 ĐỒ ÁN MÔN CHUYÊN ĐỀ ASP.NET CORE
+# 📘 HỆ THỐNG QUẢN LÝ NỘI DUNG WEBSITE (CMS)
 
-# HỆ THỐNG QUẢN LÝ NỘI DUNG WEBSITE (CMS)
-
----
-
-## 👤 SINH VIÊN THỰC HIỆN
-
-- **Họ và tên:** Nguyễn Thị Thu Thủy
-- **Mã số sinh viên:** 2123110071
-- **Môn học:** Chuyên Đề ASP.NET Core
-- **Giảng viên hướng dẫn:** ThS. Nguyễn Thái Sơn
-- **Trường:** Cao đẳng Công Thương Thành phố Hồ Chí Minh
-- **Năm học:** 2026
-- **Công nghệ sử dụng:** ASP.NET Core MVC, Entity Framework Core, SQL Server,..
+### Đồ án môn Chuyên Đề ASP.NET Core
 
 ---
 
-## 👨‍🎓 Giới Thiệu Đề Tài
+## 👨‍🎓 THÔNG TIN THỰC HIỆN
 
-Hệ thống Quản lý Nội dung Website (Content Management System - CMS) được xây dựng nhằm hỗ trợ quản trị viên quản lý và tổ chức nội dung trên website một cách hiệu quả.
-
-Đề tài được phát triển bằng ASP.NET Core MVC kết hợp Entity Framework Core và SQL Server, áp dụng mô hình MVC trong xây dựng ứng dụng Web hiện đại.
-
-Hệ thống cho phép quản lý danh mục, bài viết, sản phẩm, khách hàng, đơn hàng và người dùng thông qua giao diện quản trị trực quan.
+| Nội dung | Thông tin |
+|-----------|-----------|
+| Họ và tên sinh viên | Nguyễn Thị Thu Thủy |
+| Mã số sinh viên | 2123110071 |
+| Môn học | Chuyên Đề ASP.NET Core |
+| Giảng viên hướng dẫn | ThS. Nguyễn Thái Sơn |
+| Trường | Cao đẳng Công Thương Thành phố Hồ Chí Minh |
+| Năm học | 2026 |
+| Công nghệ sử dụng | ASP.NET Core MVC, ASP.NET Core Web API, Entity Framework Core, SQL Server |
 
 ---
 
-## 🎯 Mục Tiêu Đề Tài
+## 📖 GIỚI THIỆU ĐỀ TÀI
 
-- Tìm hiểu kiến trúc MVC trong ASP.NET Core.
+Hệ thống Quản lý Nội dung Website (Content Management System - CMS) được xây dựng nhằm hỗ trợ quản trị viên quản lý nội dung website một cách trực quan, hiệu quả và dễ dàng.
+
+Đề tài được phát triển bằng nền tảng ASP.NET Core MVC kết hợp Entity Framework Core và SQL Server, áp dụng mô hình MVC trong xây dựng ứng dụng Web hiện đại. Ngoài ra, hệ thống còn tích hợp Swagger/OpenAPI để hỗ trợ kiểm thử và tài liệu hóa các API.
+
+Hệ thống cho phép quản lý nhiều đối tượng dữ liệu khác nhau như danh mục, bài viết, sản phẩm, khách hàng, đơn hàng và người dùng.
+
+---
+
+## 🎯 MỤC TIÊU ĐỀ TÀI
+
+- Tìm hiểu mô hình MVC trong ASP.NET Core.
 - Xây dựng ứng dụng Web kết nối cơ sở dữ liệu SQL Server.
-- Thực hành Entity Framework Core theo phương pháp Code First.
-- Thực hiện đầy đủ chức năng CRUD.
+- Áp dụng Entity Framework Core theo phương pháp Code First.
+- Xây dựng và quản lý cơ sở dữ liệu bằng Migration.
+- Thực hiện đầy đủ các chức năng CRUD.
 - Áp dụng LINQ trong truy vấn dữ liệu.
-- Nâng cao kỹ năng phát triển ứng dụng Web bằng C#.
+- Xây dựng và kiểm thử API bằng Swagger.
+- Nâng cao kỹ năng phát triển ứng dụng Web bằng ngôn ngữ C#.
 
 ---
 
-## 🛠️ Công Nghệ Sử Dụng
+## 🛠️ CÔNG NGHỆ SỬ DỤNG
 
 | Công nghệ | Mô tả |
 |------------|------------|
 | Visual Studio 2022 | Môi trường phát triển |
-| ASP.NET Core MVC | Framework xây dựng Web |
+| ASP.NET Core MVC | Xây dựng ứng dụng Web |
+| ASP.NET Core Web API | Xây dựng API |
+| Swagger / OpenAPI | Kiểm thử và tài liệu hóa API |
 | C# | Ngôn ngữ lập trình |
 | Entity Framework Core | ORM |
 | SQL Server | Hệ quản trị cơ sở dữ liệu |
@@ -53,17 +59,17 @@ Hệ thống cho phép quản lý danh mục, bài viết, sản phẩm, khách 
 
 ---
 
-## 🏗️ Kiến Trúc Hệ Thống
+## 🏗️ KIẾN TRÚC HỆ THỐNG
 
 Dự án được xây dựng theo mô hình MVC (Model - View - Controller).
 
 ### Model
 
-Quản lý dữ liệu và tương tác với cơ sở dữ liệu thông qua Entity Framework Core.
+Quản lý dữ liệu và thao tác với cơ sở dữ liệu thông qua Entity Framework Core.
 
 ### View
 
-Hiển thị giao diện người dùng bằng Razor View và Bootstrap.
+Hiển thị giao diện người dùng bằng Razor View kết hợp Bootstrap.
 
 ### Controller
 
@@ -71,7 +77,24 @@ Tiếp nhận yêu cầu từ người dùng, xử lý nghiệp vụ và trả k
 
 ---
 
-## 📂 Cấu Trúc Dự Án
+## 🔗 API VÀ SWAGGER
+
+Hệ thống tích hợp Swagger/OpenAPI nhằm hỗ trợ quá trình phát triển và kiểm thử API.
+
+Các chức năng chính:
+
+- Xem danh sách dữ liệu.
+- Thêm dữ liệu mới.
+- Cập nhật dữ liệu.
+- Xóa dữ liệu.
+- Kiểm thử API trực tiếp trên trình duyệt.
+- Theo dõi phản hồi và trạng thái API.
+
+Swagger giúp đơn giản hóa quá trình phát triển, kiểm thử và bảo trì hệ thống.
+
+---
+
+## 📂 CẤU TRÚC DỰ ÁN
 
 ```text
 ThuThuyCMS_Solution
@@ -115,48 +138,58 @@ ThuThuyCMS_Solution
 
 ---
 
-## ✨ Chức Năng Hệ Thống
+## ✨ CHỨC NĂNG HỆ THỐNG
 
-### 📁 Quản Lý Danh Mục
+### 📁 Quản Lý Danh Mục (Category)
 
-- Hiển thị danh sách danh mục
-- Thêm mới danh mục
-- Chỉnh sửa danh mục
-- Xóa danh mục
+- Hiển thị danh sách danh mục.
+- Thêm danh mục mới.
+- Chỉnh sửa danh mục.
+- Xóa danh mục.
 
-### 📰 Quản Lý Bài Viết
+### 📰 Quản Lý Bài Viết (Post)
 
-- Hiển thị danh sách bài viết
-- Thêm bài viết
-- Chỉnh sửa bài viết
-- Xóa bài viết
+- Hiển thị danh sách bài viết.
+- Thêm bài viết mới.
+- Chỉnh sửa bài viết.
+- Xóa bài viết.
 
-### 🛒 Quản Lý Sản Phẩm
+### 🛒 Quản Lý Sản Phẩm (Product)
 
-- Quản lý sản phẩm
-- Quản lý danh mục sản phẩm
-- Hiển thị thông tin sản phẩm
+- Hiển thị danh sách sản phẩm.
+- Thêm sản phẩm mới.
+- Chỉnh sửa sản phẩm.
+- Xóa sản phẩm.
 
-### 👤 Quản Lý Người Dùng
+### 📦 Quản Lý Danh Mục Sản Phẩm (CategoryProduct)
 
-- Quản lý tài khoản
-- Quản lý thông tin người dùng
+- Quản lý nhóm sản phẩm.
+- Phân loại sản phẩm.
 
-### 👥 Quản Lý Khách Hàng
+### 👤 Quản Lý Người Dùng (User)
 
-- Thêm khách hàng
-- Chỉnh sửa khách hàng
-- Xóa khách hàng
+- Quản lý thông tin người dùng.
+- Cập nhật dữ liệu người dùng.
 
-### 📦 Quản Lý Đơn Hàng
+### 👥 Quản Lý Khách Hàng (Customer)
 
-- Quản lý đơn hàng
-- Quản lý chi tiết đơn hàng
-- Theo dõi thông tin mua hàng
+- Thêm khách hàng.
+- Chỉnh sửa khách hàng.
+- Xóa khách hàng.
+
+### 📦 Quản Lý Đơn Hàng (Order)
+
+- Theo dõi đơn hàng.
+- Quản lý trạng thái đơn hàng.
+
+### 📄 Quản Lý Chi Tiết Đơn Hàng (OrderDetail)
+
+- Xem chi tiết đơn hàng.
+- Quản lý sản phẩm trong đơn hàng.
 
 ---
 
-## 🗄️ Cơ Sở Dữ Liệu
+## 🗄️ CƠ SỞ DỮ LIỆU
 
 Hệ thống sử dụng SQL Server kết hợp Entity Framework Core theo phương pháp Code First.
 
@@ -175,27 +208,13 @@ Quan hệ dữ liệu được quản lý thông qua Entity Framework Core và A
 
 ---
 
-## 📸 Hình Ảnh Dự Án
+## 📸 HÌNH ẢNH DỰ ÁN
 
-### Cấu Trúc Solution
-
-![Solution Structure](images/solution-structure.png)
-
-### Quản Lý Danh Mục
-
-![Category](images/category.png)
-
-### Quản Lý Bài Viết
-
-![Post](images/post.png)
-
-### Quản Lý Sản Phẩm
-
-![Product](images/product.png)
+Hình ảnh giao diện và các chức năng của hệ thống sẽ được cập nhật trong các phiên bản tiếp theo.
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt
+## 🚀 HƯỚNG DẪN CÀI ĐẶT
 
 ### Clone Source Code
 
@@ -223,21 +242,27 @@ Update-Database
 dotnet run
 ```
 
+### Truy Cập Swagger
+
+```text
+https://localhost:{port}/swagger
+```
+
 ---
 
-## 📚 Kết Quả Đạt Được
+## 📚 KẾT QUẢ ĐẠT ĐƯỢC
 
 - Xây dựng thành công hệ thống CMS bằng ASP.NET Core MVC.
 - Kết nối SQL Server bằng Entity Framework Core.
 - Hoàn thiện chức năng CRUD cho nhiều đối tượng dữ liệu.
+- Xây dựng và kiểm thử API bằng Swagger/OpenAPI.
 - Áp dụng LINQ trong truy vấn dữ liệu.
 - Thực hiện Migration quản lý cơ sở dữ liệu.
 - Nắm vững mô hình MVC trong phát triển ứng dụng Web.
-
-
+- Nâng cao kỹ năng lập trình C# và quản lý dữ liệu.
 
 ---
 
-## 📄 Mục Đích
+## 📄 MỤC ĐÍCH
 
-Dự án được thực hiện nhằm phục vụ học tập, nghiên cứu và thực hành phát triển ứng dụng Web bằng ASP.NET Core MVC.
+Dự án được thực hiện nhằm phục vụ học tập, nghiên cứu và thực hành phát triển ứng dụng Web bằng ASP.NET Core MVC, đồng thời giúp sinh viên tiếp cận quy trình xây dựng một hệ thống quản lý nội dung hoàn chỉnh từ thiết kế cơ sở dữ liệu đến triển khai ứng dụng.
