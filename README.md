@@ -1,40 +1,160 @@
-BUỔI 4: XÂY DỰNG GIAO DIỆN QUẢN TRỊ (ADMIN PANEL) TOÀN DIỆN
+# 📅 BUỔI 6: WEB API & RESTFUL SERVICE
 
-Mục tiêu buổi học
-Buổi 4 tập trung xây dựng hệ thống quản trị (Admin Panel) hoàn chỉnh cho dự án CMS bằng ASP.NET Core MVC. Sinh viên thực hành thiết kế giao diện quản trị chuyên nghiệp, xây dựng chức năng quản lý dữ liệu và thao tác CRUD theo mô hình MVC.
-1. Xây dựng Layout quản trị (_LayoutAdmin.cshtml)
-- Tạo file _LayoutAdmin.cshtml trong Views/Shared
-- Thiết kế giao diện quản trị bằng Bootstrap
-- Xây dựng Sidebar điều hướng gồm: Dashboard, Danh mục, Bài viết, Thành viên, Danh mục sản phẩm, Sản phẩm, Khách hàng, Đơn hàng, Chi tiết đơn hàng
-- Sử dụng Razor Layout, Bootstrap Grid System, Bootstrap Icons và Tag Helper.
-2. Quản trị Danh mục (Category Management)
-- Hiển thị danh sách danh mục
-- Thêm, sửa, xóa danh mục
-- Thực hành CRUD với Entity Framework Core.
-3. Quản trị Bài viết (Post Management)
-- Hiển thị bài viết dạng Card gồm ảnh, tiêu đề, nội dung, ngày đăng,...
-- Thêm mới bài viết bằng Form MVC
-- Upload ảnh bằng IFormFile và lưu vào wwwroot/uploads
-- Dùng Guid.NewGuid() tránh trùng tên file
-- Sửa bài viết và giữ lại ảnh cũ bằng AsNoTracking()
-- Xóa bài viết bằng quy trình Find → Remove → SaveChanges.
-4. Tích hợp CKEditor 5
-- Tích hợp CKEditor bằng CDN
-- Hỗ trợ soạn thảo nội dung nâng cao
-- Hiển thị nội dung HTML bằng Html.Raw().
-5. Quản trị Thành viên (User Management)
-- Hiển thị danh sách thành viên
-- Thêm, sửa, xóa User
-- Phân quyền Admin và Editor
-- Kiểm tra Username tồn tại
-- Giữ mật khẩu cũ nếu không nhập mật khẩu mới.
-6. Quản trị Danh mục sản phẩm và Sản phẩm
-- CRUD danh mục sản phẩm
-- CRUD sản phẩm
-- Upload ảnh sản phẩm và liên kết với danh mục.
-7. Quản trị Khách hàng và Đơn hàng
-- Quản lý khách hàng
-- Quản lý đơn hàng và chi tiết đơn hàng
-- Hiển thị dữ liệu liên kết bằng Entity Framework Core.
-Kết quả sau buổi học
-Sau buổi 4, hệ thống CMS đã có giao diện quản trị hoàn chỉnh, hỗ trợ CRUD dữ liệu, upload hình ảnh, soạn thảo nội dung bằng CKEditor và phân quyền Admin/Editor, sẵn sàng cho phần Authentication và Authorization ở buổi tiếp theo.
+## 🎯 Mục tiêu bài học
+
+- Hiểu kiến trúc Client - Server trong ứng dụng Web hiện đại.
+- Hiểu vai trò của Web API trong việc cung cấp dữ liệu.
+- Làm quen với định dạng JSON.
+- Xây dựng RESTful API bằng ASP.NET Core.
+- Sử dụng Swagger để kiểm thử API.
+- Cấu hình CORS để kết nối Backend với ReactJS.
+
+---
+
+## 1. KHÁI NIỆM TRỌNG TÂM: WEB API
+
+Trong mô hình MVC, Backend trả về giao diện HTML.
+
+Trong Web API, Backend chỉ trả về dữ liệu dạng JSON để Frontend (ReactJS, Mobile) tự xử lý giao diện.
+
+### Kiến trúc hệ thống
+
+- Backend (ASP.NET Core): Cung cấp dữ liệu
+- Frontend (ReactJS): Hiển thị giao diện
+- Giao tiếp qua JSON
+
+---
+
+## 2. JSON LÀ GÌ?
+
+JSON là định dạng dữ liệu dùng để trao đổi giữa Client và Server.
+
+Ví dụ:
+
+```json
+{
+  "id": 1,
+  "title": "ASP.NET Core Web API",
+  "author": "Nguyễn Thị Thu Thủy"
+}
+```
+
+---
+
+## 3. TẠO API CONTROLLER
+
+Tạo controller:
+
+```csharp
+[Route("api/[controller]")]
+[ApiController]
+public class PostsController : ControllerBase
+{
+    private readonly ApplicationDbContext _context;
+
+    public PostsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+}
+```
+
+---
+
+## 4. API LẤY DANH SÁCH BÀI VIẾT
+
+### GET: /api/posts
+
+```csharp
+[HttpGet]
+public IActionResult GetAll()
+{
+    var posts = _context.Posts.ToList();
+    return Ok(posts);
+}
+```
+
+---
+
+## 5. API LẤY BÀI VIẾT THEO DANH MỤC
+
+### GET: /api/posts/category/{id}
+
+```csharp
+[HttpGet("category/{categoryId}")]
+public IActionResult GetByCategory(int categoryId)
+{
+    var posts = _context.Posts
+        .Where(p => p.CategoryId == categoryId)
+        .ToList();
+
+    return Ok(posts);
+}
+```
+
+---
+
+## 6. API CHI TIẾT BÀI VIẾT
+
+### GET: /api/posts/{id}
+
+```csharp
+[HttpGet("{id}")]
+public IActionResult GetDetail(int id)
+{
+    var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+
+    if (post == null)
+        return NotFound();
+
+    return Ok(post);
+}
+```
+
+---
+
+## 7. SWAGGER – KIỂM THỬ API
+
+- Công cụ test API trực tiếp trên trình duyệt.
+- Xem dữ liệu JSON trả về.
+- Kiểm tra các endpoint GET, POST,...
+
+---
+
+## 8. CẤU HÌNH CORS
+
+Cho phép ReactJS truy cập API từ domain khác.
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
+});
+
+app.UseCors("AllowAll");
+```
+
+---
+
+## 9. HTTP STATUS CODE
+
+- **200**: Thành công
+- **201**: Tạo mới thành công
+- **400**: Dữ liệu sai
+- **401**: Chưa đăng nhập
+- **404**: Không tìm thấy dữ liệu
+- **500**: Lỗi hệ thống
+
+---
+
+## 📚 KẾT QUẢ ĐẠT ĐƯỢC
+
+- Hiểu kiến trúc Web API.
+- Xây dựng API bằng ASP.NET Core.
+- Trả dữ liệu JSON cho Frontend.
+- Sử dụng Swagger để kiểm thử API.
+- Kết nối ReactJS thông qua CORS.
+- Hoàn thiện nền tảng Backend cho hệ thống CMS.
