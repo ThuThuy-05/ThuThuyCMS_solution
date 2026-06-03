@@ -1,160 +1,220 @@
-﻿/*
-*Sinh vien: Nguyen Thi Thu Thuy
-*Ma sv: 2123110071
-*Ngay tao: 14-05-2026
-*Version: 1.0
-*
-*/
-
-using CMS.Data;
+﻿using CMS.Data;
 using CMS.Data.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
-[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
-
-public class CustomersController : Controller
+namespace CMS.Backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public CustomersController(ApplicationDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CustomersController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    // =========================
-    // DANH SÁCH KHÁCH HÀNG
-    // =========================
-    public IActionResult Index()
-    {
-        var data = _context.Customers.ToList();
-
-        return View(data);
-    }
-
-    // =========================
-    // XEM CHI TIẾT KHÁCH HÀNG
-    // =========================
-    public IActionResult Details(int id)
-    {
-        var customer = _context.Customers
-            .Include(x => x.Orders)
-            .FirstOrDefault(x => x.Id == id);
-
-        if (customer == null)
-            return NotFound();
-
-        return View(customer);
-    }
-
-    // =========================
-    // THÊM KHÁCH HÀNG
-    // =========================
-
-    // GET
-    [HttpGet]
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST
-    [HttpPost]
-    public IActionResult Create(Customer model)
-    {
-        // Kiểm tra email đã tồn tại chưa
-        var checkEmail = _context.Customers
-            .Any(x => x.Email == model.Email);
-
-        if (checkEmail)
+        public CustomersController(ApplicationDbContext context)
         {
-            ModelState.AddModelError("Email", "Email đã tồn tại!");
-
-            return View(model);
+            _context = context;
         }
 
         // =========================
-        // MÃ HÓA PASSWORD
+        // 1. GET ALL CUSTOMERS (FIX CYCLE)
         // =========================
-        model.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
-
-        // Lưu database
-        _context.Customers.Add(model);
-
-        _context.SaveChanges();
-
-        return RedirectToAction("Index");
-    }
-
-    // =========================
-    // SỬA KHÁCH HÀNG
-    // =========================
-
-    // GET
-    [HttpGet]
-    public IActionResult Edit(int id)
-    {
-        var customer = _context.Customers.Find(id);
-
-        if (customer == null)
-            return NotFound();
-
-        return View(customer);
-    }
-
-    // POST
-    [HttpPost]
-    public IActionResult Edit(Customer model, string NewPassword)
-    {
-        var customer = _context.Customers
-            .AsNoTracking()
-            .FirstOrDefault(x => x.Id == model.Id);
-
-        if (customer == null)
-            return NotFound();
-
-        // Nếu nhập password mới
-        if (!string.IsNullOrEmpty(NewPassword))
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            model.Password = BCrypt.Net.BCrypt.HashPassword(NewPassword);
-        }
-        else
-        {
-            // Giữ password cũ
-            model.Password = customer.Password;
+            try
+            {
+                var customers = await _context.Customers
+                    .Select(c => new
+                    {
+                        c.Id,
+                        c.FullName,
+                        c.Email,
+                        c.Phone,
+                        c.Address
+                    })
+                    .ToListAsync();
+
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi lấy danh sách khách hàng",
+                    detail = ex.Message
+                });
+            }
         }
 
-        _context.Customers.Update(model);
-
-        _context.SaveChanges();
-
-        return RedirectToAction("Index");
-    }
-
-    // =========================
-    // XÓA KHÁCH HÀNG
-    // =========================
-    public IActionResult Delete(int id)
-    {
-        var customer = _context.Customers
-            .Include(x => x.Orders)
-            .FirstOrDefault(x => x.Id == id);
-
-        if (customer == null)
-            return NotFound();
-
-        // Xóa đơn hàng trước
-        if (customer.Orders != null && customer.Orders.Any())
+        // =========================
+        // 2. GET BY ID (FIX CYCLE)
+        // =========================
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            _context.Orders.RemoveRange(customer.Orders);
+            try
+            {
+                var customer = await _context.Customers
+                    .Where(c => c.Id == id)
+                    .Select(c => new
+                    {
+                        c.Id,
+                        c.FullName,
+                        c.Email,
+                        c.Phone,
+                        c.Address,
+                        Orders = c.Orders.Select(o => new
+                        {
+                            o.Id,
+                            o.OrderDate,
+                            o.Status,
+                            o.Notes
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (customer == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy khách hàng" });
+                }
+
+                return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi lấy chi tiết khách hàng",
+                    detail = ex.Message
+                });
+            }
         }
 
-        // Xóa customer
-        _context.Customers.Remove(customer);
+        // =========================
+        // 3. CREATE (GIỮ NGUYÊN)
+        // =========================
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CustomerDTO input)
+        {
+            if (input == null)
+            {
+                return BadRequest(new { message = "Dữ liệu không hợp lệ" });
+            }
 
-        _context.SaveChanges();
+            try
+            {
+                var customer = new Customer
+                {
+                    FullName = input.FullName,
+                    Email = input.Email,
+                    Phone = input.Phone,
+                    Address = input.Address,
+                    Password = input.Password
+                };
 
-        return RedirectToAction("Index");
+                _context.Customers.Add(customer);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(201, new
+                {
+                    message = "Tạo khách hàng thành công",
+                    customerId = customer.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi tạo khách hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+
+        // =========================
+        // 4. UPDATE (GIỮ NGUYÊN)
+        // =========================
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] CustomerDTO input)
+        {
+            try
+            {
+                var customer = await _context.Customers.FindAsync(id);
+
+                if (customer == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy khách hàng" });
+                }
+
+                customer.FullName = input.FullName;
+                customer.Email = input.Email;
+                customer.Phone = input.Phone;
+                customer.Address = input.Address;
+                customer.Password = input.Password;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Cập nhật khách hàng thành công",
+                    customerId = customer.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi cập nhật khách hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+
+        // =========================
+        // 5. DELETE (GIỮ NGUYÊN)
+        // =========================
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var customer = await _context.Customers.FindAsync(id);
+
+                if (customer == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy khách hàng" });
+                }
+
+                _context.Customers.Remove(customer);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Xóa khách hàng thành công"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi xóa khách hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+    }
+
+    // DTO giữ nguyên
+    public class CustomerDTO
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -1,68 +1,194 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CMS.Data;
+using CMS.Data.Entities;
 
 namespace CMS.Backend.Controllers
 {
-    // 1. Định nghĩa đường dẫn để gọi API. [controller] sẽ tự lấy tên là "Categories"
-    // Khi chạy, địa chỉ truy cập dữ liệu sẽ là: https://localhost:xxxx/api/categories
     [Route("api/[controller]")]
-
-    // 2. Đánh dấu đây là một API Controller để hệ thống hỗ trợ các tính năng tự động kiểm tra dữ liệu đầu vào
     [ApiController]
-
-    // 3. API Controller phải kế thừa từ ControllerBase (thay vì kế thừa từ Controller như phân hệ MVC)
     public class ProductsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        // 4. Hàm khởi tạo (Constructor): "Tiêm" ngữ cảnh dữ liệu SQL Server vào để sử dụng
         public ProductsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // 1. Chỉ định phương thức GET (Dùng để kéo dữ liệu từ cơ sở dữ liệu)
+        // =========================
+        // GET ALL
+        // =========================
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            // Lấy toàn bộ dữ liệu từ bảng Products số nhiều trong SQL Server
             var products = await _context.Products
-                .OrderByDescending(p => p.Id) // Sắp xếp sản phẩm mới nhất lên đầu
+                .OrderByDescending(p => p.Id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Description,
+                    p.Price,
+                    p.StockQuantity,
+                    p.ImageUrl,
+                    p.CategoryProductId
+                })
                 .ToListAsync();
 
-            // Trả về kết quả cho Frontend kèm mã trạng thái HTTP 200 OK (Thành công)
             return Ok(products);
         }
 
-        // 2. Định nghĩa đường dẫn chứa tham số động: api/products/categoryproduct/{categoryproductId}
-        [HttpGet("categoryproduct/{categoryProductId}")]
-        public async Task<IActionResult> GetByCategoryProduct(int categoryProductId)
+        // =========================
+        // GET BY CATEGORY
+        // =========================
+        [HttpGet("category/{categoryProductId}")]
+        public async Task<IActionResult> GetByCategory(int categoryProductId)
         {
-            // Lọc các bài viết có CategoryId trùng với ID truyền vào từ thanh URL
             var products = await _context.Products
                 .Where(p => p.CategoryProductId == categoryProductId)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Description,
+                    p.Price,
+                    p.StockQuantity,
+                    p.ImageUrl
+                })
                 .ToListAsync();
 
             return Ok(products);
         }
-        // 3. Định nghĩa đường dẫn nhận ID trực tiếp: api/products/{id}
+
+        // =========================
+        // GET DETAIL
+        // =========================
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDetail(int id)
         {
-            // 3.1. Quét bảng Products để tìm sản phẩm đầu tiên có Id khớp với tham số
             var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Description,
+                    p.Price,
+                    p.StockQuantity,
+                    p.ImageUrl,
+                    p.CategoryProductId
+                })
+                .FirstOrDefaultAsync();
 
-            // 3.2 Xử lý kịch bản lỗi bảo vệ hệ thống: ID không tồn tại trong Database
             if (product == null)
             {
-                // Trả về mã lỗi 404 kèm một "gói tin" JSON thông báo nhỏ gọn để Frontend tự xử lý UI
-                return NotFound(new { message = "Không tìm thấy sản phẩm này trong hệ thống" });
+                return NotFound(new { message = "Không tìm thấy sản phẩm" });
             }
 
-            // 3.3. Trả về toàn bộ đối tượng sản phẩm (bao gồm cả trường Content chứa mã HTML) kèm mã 200 OK
             return Ok(product);
         }
+
+        // =========================
+        // CREATE (POST)
+        // =========================
+        [HttpPost]
+        public async Task<IActionResult> Create(ProductCreate model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                return BadRequest(new { message = "Tên sản phẩm không được rỗng" });
+            }
+
+            var product = new Product
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Price = model.Price,
+                StockQuantity = model.StockQuantity,
+                ImageUrl = model.ImageUrl,
+                CategoryProductId = model.CategoryProductId
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Thêm sản phẩm thành công",
+                data = product
+            });
+        }
+
+        // =========================
+        // UPDATE (PUT)
+        // =========================
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, ProductUpdate model)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound(new { message = "Không tìm thấy sản phẩm" });
+            }
+
+            product.Name = model.Name;
+            product.Description = model.Description;
+            product.Price = model.Price;
+            product.StockQuantity = model.StockQuantity;
+            product.ImageUrl = model.ImageUrl;
+            product.CategoryProductId = model.CategoryProductId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Cập nhật thành công",
+                data = product
+            });
+        }
+
+        // =========================
+        // DELETE
+        // =========================
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound(new { message = "Không tìm thấy sản phẩm" });
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Xoá thành công"
+            });
+        }
+    }
+
+    public class ProductCreate
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public int StockQuantity { get; set; }
+        public string ImageUrl { get; set; }
+        public int CategoryProductId { get; set; }
+    }
+
+    public class ProductUpdate
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public int StockQuantity { get; set; }
+        public string ImageUrl { get; set; }
+        public int CategoryProductId { get; set; }
     }
 }

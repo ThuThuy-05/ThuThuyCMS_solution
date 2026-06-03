@@ -1,64 +1,55 @@
-﻿/*
-*Sinh vien: Nguyen Thi Thu Thuy
-*Ma sv: 2123110071
-*Ngay tao: 28-05-2026
-*Version: 1.0
-*
-*/
-using Microsoft.AspNetCore.Mvc;
-using CMS.Data; // Thay bằng Namespace của project chứa ApplicationDbContext của bạn
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CMS.Data;
+using CMS.Data.Entities;
 
 namespace CMS.Backend.Controllers
 {
-    // 1. Định nghĩa đường dẫn để gọi API. [controller] sẽ tự lấy tên "Posts"
-    // Khi chạy, địa chỉ sẽ là: https://localhost:xxxx/api/posts
     [Route("api/[controller]")]
-
-    // 2. Đánh dấu đây là một API Controller để hệ thống hỗ trợ các tính năng RESTful
     [ApiController]
-
-    // 3. API Controller phải kế thừa từ ControllerBase (thay vì Controller như MVC)
     public class PostsController : ControllerBase
     {
-        // 4. Khai báo biến kết nối Database
         private readonly ApplicationDbContext _context;
 
-        // 5. Hàm khởi tạo (Constructor): "Tiêm" kết nối Database vào để sử dụng
         public PostsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // 1. Chỉ định đây là phương thức GET (Dùng để lấy dữ liệu)
+        // =========================
+        // GET ALL
+        // =========================
         [HttpGet]
         public IActionResult GetAll()
         {
-            // Lấy dữ liệu từ bảng Posts
             var posts = _context.Posts
-                .OrderByDescending(p => p.Id) // Sắp xếp bài mới nhất lên đầu
-                .Select(p => new {            // "Gọt tỉa" dữ liệu: chỉ lấy những trường cần thiết
+                .OrderByDescending(p => p.Id)
+                .Select(p => new
+                {
                     p.Id,
                     p.Title,
                     p.ImageUrl,
                     p.CreatedDate,
-                    CategoryName = p.Category.Name // Lấy tên danh mục thay vì chỉ lấy ID
+                    CategoryName = p.Category.Name
                 })
                 .ToList();
 
-            // Trả về kết quả cho Frontend kèm mã trạng thái 200 (Thành công)
             return Ok(posts);
         }
 
-        // 2. Định nghĩa đường dẫn có tham số: api/posts/category/{id}
+        // =========================
+        // GET BY CATEGORY
+        // =========================
         [HttpGet("category/{categoryId}")]
         public IActionResult GetByCategory(int categoryId)
         {
-            // Lọc các bài viết có CategoryId trùng với ID truyền vào từ URL
             var posts = _context.Posts
                 .Where(p => p.CategoryId == categoryId)
-                .Select(p => new {
+                .Select(p => new
+                {
                     p.Id,
                     p.Title,
+                    p.Content,
                     p.ImageUrl,
                     p.CreatedDate
                 })
@@ -67,26 +58,126 @@ namespace CMS.Backend.Controllers
             return Ok(posts);
         }
 
-        // 1. Định nghĩa đường dẫn nhận ID: api/posts/{id}
+        // =========================
+        // GET DETAIL
+        // =========================
         [HttpGet("{id}")]
         public IActionResult GetDetail(int id)
         {
-            // 2. Tìm bài viết đầu tiên có Id khớp với tham số truyền vào
             var post = _context.Posts
-                .FirstOrDefault(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Content,
+                    p.ImageUrl,
+                    p.CreatedDate,
+                    p.CategoryId
+                })
+                .FirstOrDefault();
 
-            // 3. Xử lý trường hợp không tìm thấy (ID không tồn tại)
             if (post == null)
             {
-                // Trả về lỗi 404 kèm thông báo dưới dạng JSON
-                return NotFound(new { message = "Không tìm thấy bài viết này trong hệ thống" });
+                return NotFound(new { message = "Không tìm thấy bài viết" });
             }
 
-            // 4. Trả về bài viết tìm thấy kèm mã 200 (Thành công)
             return Ok(post);
         }
 
+        // =========================
+        // CREATE (POST)
+        // =========================
+        [HttpPost]
+        public async Task<IActionResult> Create(PostCreate model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Title))
+            {
+                return BadRequest(new { message = "Tiêu đề không được rỗng" });
+            }
 
+            var post = new Post
+            {
+                Title = model.Title,
+                Content = model.Content,
+                ImageUrl = model.ImageUrl,
+                CreatedDate = DateTime.Now,
+                CategoryId = model.CategoryId
+            };
+
+            _context.Posts.Add(post);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Thêm bài viết thành công",
+                data = post
+            });
+        }
+
+        // =========================
+        // UPDATE (PUT)
+        // =========================
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, PostUpdate model)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound(new { message = "Không tìm thấy bài viết" });
+            }
+
+            post.Title = model.Title;
+            post.Content = model.Content;
+            post.ImageUrl = model.ImageUrl;
+            post.CategoryId = model.CategoryId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Cập nhật thành công",
+                data = post
+            });
+        }
+
+        // =========================
+        // DELETE
+        // =========================
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound(new { message = "Không tìm thấy bài viết" });
+            }
+
+            _context.Posts.Remove(post);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Xoá thành công"
+            });
+        }
     }
 
+    public class PostCreate
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string ImageUrl { get; set; }
+        public int CategoryId { get; set; }
+    }
+
+    public class PostUpdate
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string ImageUrl { get; set; }
+        public int CategoryId { get; set; }
+    }
 }

@@ -28,7 +28,7 @@ namespace CMS.Data.Entities
 
         [Range(0, double.MaxValue)] // Ràng buộc giá phải lớn hơn hoặc bằng 0
         [Column(TypeName = "decimal(18,2)")]// Định nghĩa kiểu dữ liệu decimal với độ chính xác 18 và 2 chữ số thập phân
-        public decimal Price { get; set; } // Giá sản phẩm
+        public double Price { get; set; } // Giá sản phẩm
 
         public int StockQuantity { get; set; } // Số lượng tồn kho
 

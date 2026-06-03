@@ -1,6 +1,7 @@
-﻿using CMS.Data; // Thay bằng namespace thực tế của anh
+﻿using CMS.Data;
 using CMS.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -17,14 +18,12 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// API: Tiếp nhận đơn đặt hàng từ giỏ hàng FrontEnd gửi lên
-        /// Đường dẫn: POST https://localhost:xxxx/api/Orders
-        /// </summary>
+        // =========================
+        // 1. CREATE ORDER
+        // =========================
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderInputDTO input)
         {
-            // 1. Kiểm tra kịch bản lỗi bảo vệ: Nếu dữ liệu truyền lên trống rỗng
             if (input == null)
             {
                 return BadRequest(new { message = "Dữ liệu đơn hàng không hợp lệ" });
@@ -32,21 +31,17 @@ namespace CMS.Backend.Controllers
 
             try
             {
-                // Bước A: Tự động khởi tạo cấu trúc thực thể Đơn hàng mới
-                // LƯU Ý: Đã hiệu chỉnh bỏ trường TotalAmount, dùng trường [Notes] số nhiều theo đúng hình ảnh thực tế
                 var newOrder = new Order
                 {
-                    OrderDate = DateTime.Now, // Tự động lấy ngày giờ thực tế máy tính lúc mua
+                    OrderDate = DateTime.Now,
                     CustomerId = input.CustomerId,
-                    Status = 0,               // 0: Mặc định đơn hàng mới ở trạng thái "Chờ xử lý"
+                    Status = 0,
                     Notes = input.Notes
                 };
 
-                // Bước B: Thêm vào bảng tạm và chốt lưu xuống SQL Server
                 _context.Orders.Add(newOrder);
-                await _context.SaveChangesAsync(); // Ép hệ thống sinh ra mã ID Đơn hàng tự động tăng
+                await _context.SaveChangesAsync();
 
-                // Bước C: Trả về mã thành công 201 Created và gửi ngược lại mã ID đơn hàng vừa tạo
                 return StatusCode(201, new
                 {
                     message = "Đặt hàng thành công!",
@@ -55,15 +50,153 @@ namespace CMS.Backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Lỗi xử lý tạo đơn hàng ngầm", detail = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Lỗi tạo đơn hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+
+        // =========================
+        // 2. GET ALL ORDERS
+        // =========================
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _context.Orders
+                    .OrderByDescending(o => o.OrderDate)
+                    .ToListAsync();
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi lấy danh sách đơn hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+
+        // =========================
+        // 3. GET ORDER BY ID
+        // =========================
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+
+                if (order == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy đơn hàng" });
+                }
+
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi lấy chi tiết đơn hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+
+        // =========================
+        // 4. UPDATE ORDER
+        // =========================
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(int id, [FromBody] OrderUpdateDTO input)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+
+                if (order == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy đơn hàng" });
+                }
+
+                order.CustomerId = input.CustomerId;
+                order.Notes = input.Notes;
+                order.Status = input.Status;
+
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Cập nhật đơn hàng thành công",
+                    orderId = order.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi cập nhật đơn hàng",
+                    detail = ex.Message
+                });
+            }
+        }
+
+        // =========================
+        // 5. DELETE ORDER
+        // =========================
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+
+                if (order == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy đơn hàng" });
+                }
+
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Xóa đơn hàng thành công"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi xóa đơn hàng",
+                    detail = ex.Message
+                });
             }
         }
     }
 
-    // LỚP DTO TRUNG GIAN ĐỂ HỨNG DỮ LIỆU TỪ FRONTEND TRUYỀN LÊN
+    // =========================
+    // DTO CREATE
+    // =========================
     public class OrderInputDTO
     {
         public int CustomerId { get; set; }
         public string Notes { get; set; }
+    }
+
+    // =========================
+    // DTO UPDATE
+    // =========================
+    public class OrderUpdateDTO
+    {
+        public int CustomerId { get; set; }
+        public string Notes { get; set; }
+        public int Status { get; set; }
     }
 }
