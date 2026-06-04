@@ -16,14 +16,16 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
-        // =========================
-        // GET ALL
-        // =========================
+        // ==================================================
+        // 1. GET /api/Posts
+        // 👉 FE: LatestBlog (Tầng 5)
+        // 👉 Lấy bài viết mới nhất
+        // ==================================================
         [HttpGet]
         public IActionResult GetAll()
         {
             var posts = _context.Posts
-                .OrderByDescending(p => p.Id)
+                .OrderByDescending(p => p.CreatedDate)
                 .Select(p => new
                 {
                     p.Id,
@@ -37,30 +39,10 @@ namespace CMS.Backend.Controllers
             return Ok(posts);
         }
 
-        // =========================
-        // GET BY CATEGORY
-        // =========================
-        [HttpGet("category/{categoryId}")]
-        public IActionResult GetByCategory(int categoryId)
-        {
-            var posts = _context.Posts
-                .Where(p => p.CategoryId == categoryId)
-                .Select(p => new
-                {
-                    p.Id,
-                    p.Title,
-                    p.Content,
-                    p.ImageUrl,
-                    p.CreatedDate
-                })
-                .ToList();
-
-            return Ok(posts);
-        }
-
-        // =========================
-        // GET DETAIL
-        // =========================
+        // ==================================================
+        // 2. GET /api/Posts/{id}
+        // 👉 FE: xem chi tiết bài viết
+        // ==================================================
         [HttpGet("{id}")]
         public IActionResult GetDetail(int id)
         {
@@ -73,7 +55,8 @@ namespace CMS.Backend.Controllers
                     p.Content,
                     p.ImageUrl,
                     p.CreatedDate,
-                    p.CategoryId
+                    p.CategoryId,
+                    CategoryName = p.Category.Name
                 })
                 .FirstOrDefault();
 
@@ -85,99 +68,26 @@ namespace CMS.Backend.Controllers
             return Ok(post);
         }
 
-        // =========================
-        // CREATE (POST)
-        // =========================
-        [HttpPost]
-        public async Task<IActionResult> Create(PostCreate model)
+        // ==================================================
+        // 3. GET /api/Posts/category/{categoryId}
+        // 👉 FE: filter theo danh mục (optional UI)
+        // ==================================================
+        [HttpGet("category/{categoryId}")]
+        public IActionResult GetByCategory(int categoryId)
         {
-            if (string.IsNullOrWhiteSpace(model.Title))
-            {
-                return BadRequest(new { message = "Tiêu đề không được rỗng" });
-            }
+            var posts = _context.Posts
+                .Where(p => p.CategoryId == categoryId)
+                .OrderByDescending(p => p.CreatedDate)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.ImageUrl,
+                    p.CreatedDate
+                })
+                .ToList();
 
-            var post = new Post
-            {
-                Title = model.Title,
-                Content = model.Content,
-                ImageUrl = model.ImageUrl,
-                CreatedDate = DateTime.Now,
-                CategoryId = model.CategoryId
-            };
-
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                message = "Thêm bài viết thành công",
-                data = post
-            });
+            return Ok(posts);
         }
-
-        // =========================
-        // UPDATE (PUT)
-        // =========================
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, PostUpdate model)
-        {
-            var post = await _context.Posts.FindAsync(id);
-
-            if (post == null)
-            {
-                return NotFound(new { message = "Không tìm thấy bài viết" });
-            }
-
-            post.Title = model.Title;
-            post.Content = model.Content;
-            post.ImageUrl = model.ImageUrl;
-            post.CategoryId = model.CategoryId;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                message = "Cập nhật thành công",
-                data = post
-            });
-        }
-
-        // =========================
-        // DELETE
-        // =========================
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-
-            if (post == null)
-            {
-                return NotFound(new { message = "Không tìm thấy bài viết" });
-            }
-
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                message = "Xoá thành công"
-            });
-        }
-    }
-
-    public class PostCreate
-    {
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public string ImageUrl { get; set; }
-        public int CategoryId { get; set; }
-    }
-
-    public class PostUpdate
-    {
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public string ImageUrl { get; set; }
-        public int CategoryId { get; set; }
     }
 }
