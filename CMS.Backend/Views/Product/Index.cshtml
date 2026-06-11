@@ -9,7 +9,7 @@
     <div class="d-flex justify-content-between mb-3">
         <h2 class="text-dark">DANH SÁCH SẢN PHẨM</h2>
 
-        <a href="/Products/Create" class="btn btn-success">
+        <a href="/Product/Create" class="btn btn-success">
             + Thêm sản phẩm
         </a>
     </div>
@@ -42,10 +42,10 @@
                     <td>@item.StockQuantity</td>
                     <td>@item.Description</td>
                     <td>
-                        <a href="/Products/Edit/@item.Id"
+                        <a href="/Product/Edit/@item.Id"
                            class="btn btn-warning btn-sm">Sửa</a>
 
-                        <a href="/Products/Delete/@item.Id"
+                        <a href="/Product/Delete/@item.Id"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Bạn có chắc muốn xóa không?')">
                             Xóa

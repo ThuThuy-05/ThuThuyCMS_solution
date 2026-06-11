@@ -60,6 +60,14 @@ app.UseCors("AllowAll");
 // Authentication trước Authorization
 app.UseAuthentication();
 app.UseAuthorization();
+// Route
+app.UseStaticFiles();
+
+// Kích hoạt CORS đúng vị trí này
+app.UseCors("AllowReactApp");
+
+app.UseAuthorization();
+
 
 // Route
 app.MapControllerRoute(
@@ -67,3 +75,15 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// ---- CẤU HÌNH CORS (THÊM VÀO TRƯỚC builder.Build()) ----
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Cho phép ReactJS ở port 3000 gọi tới
+              .AllowAnyHeader()                     // Cho phép mọi loại Header (Content-Type, Authorization...)
+              .AllowAnyMethod()                     // Cho phép mọi phương thức HTTP (GET, POST, PUT, DELETE)
+              .AllowCredentials();                  // Hỗ trợ truyền Cookie/Session nếu cần sau này
+    });
+});
