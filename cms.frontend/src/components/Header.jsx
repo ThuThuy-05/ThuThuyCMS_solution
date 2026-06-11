@@ -37,7 +37,7 @@ function Header() {
                             <i className="fas fa-phone-alt mr-1"></i> Hotline: 090x.xxx.xxx
                         </span>
                         <span>
-                            <i className="fas fa-envelope mr-1"></i> Email: support@thaicms.retail
+                            <i className="fas fa-envelope mr-1"></i> Email: support@thuycms.retail
                         </span>
                     </div>
                     {/* Bên phải: Nút Đăng nhập / Đăng ký nhanh (Sử dụng mr-3 chuẩn v4) */}
@@ -65,7 +65,7 @@ function Header() {
                         <div className="col-md-3 col-6">
                             <Link to="/" className="text-decoration-none">
                                 <h3 className="font-weight-bold m-0" style={{ color: '#005088', letterSpacing: '1px' }}>
-                                    ThaiCMS<span style={{ color: '#11CAA0' }}>.Fashion</span>
+                                    ThuyCMS<span style={{ color: '#11CAA0' }}>.Nike</span>
                                 </h3>
                             </Link>
                         </div>
@@ -77,7 +77,7 @@ function Header() {
                                 <input
                                     type="text"
                                     className="form-control border-right-0"
-                                    placeholder="Tìm kiếm mẫu đầm dạ hội, sơ mi công sở..."
+                                    placeholder="Tìm kiếm giày..."
                                     style={{ borderRadius: '20px 0 0 20px', fontSize: '14px' }}
                                 />
                                 <div className="input-group-append">

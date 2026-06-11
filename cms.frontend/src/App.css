@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+    background: #f5f7fa;
+}
+
+.page-title-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
+
+.page-title-line {
+    width: 80px;
+    height: 4px;
+    background: #11CAA0;
+    margin-top: 15px;
+}

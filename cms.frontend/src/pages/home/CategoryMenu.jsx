@@ -5,13 +5,12 @@ import categoryProductService from '../../services/categoryProductService';
 
 
 
-function CategoryMenu() {
+function CategoryMenu({ activeCategoryId, onCategoryChange }) {
     // 1. Khai báo State để lưu mảng danh mục sản phẩm từ SQL Server đổ về
     const [categories, setCategories] = useState([]);
 
 
     // 2. Khai báo State để theo dõi danh mục nào đang được người dùng bấm chọn (Mặc định là chọn tất cả - null)
-    const [activeCategoryId, setActiveCategoryId] = useState(null);
 
 
     // 3. Khai báo State quản lý trạng thái Loading dữ liệu mạng
@@ -47,8 +46,9 @@ function CategoryMenu() {
 
 
     // 5. Hàm xử lý khi khách hàng click chọn một danh mục thời trang cụ thể
+    // 5. Hàm xử lý khi khách hàng click chọn một danh mục thời trang cụ thể
     const handleCategoryClick = (id) => {
-        setActiveCategoryId(id);
+        onCategoryChange(id);
         // Điểm mở rộng đồ án: Đây là nơi sinh viên sẽ viết logic truyền Id này sang
         // để ép file thành phần component  <ProductGrid /> (Tầng 4) tải lại sản phẩm theo bộ lọc.
         console.log(`Sinh viên sẽ xử lý lọc sản phẩm cho danh mục có ID: ${id}`);

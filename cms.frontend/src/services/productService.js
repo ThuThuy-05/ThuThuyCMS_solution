@@ -33,7 +33,17 @@ const productService = {
             console.error(`Lỗi API getProductById với ID ${id}:`, error);
             throw error;
         }
-    }
+    },
+
+    getProductsByCategory: async (categoryId) => {
+        try {
+            const response = await axiosClient.get(`/Products/category/${categoryId}`);
+            return response.data || response;
+        } catch (error) {
+            console.error(`Lỗi API getProductsByCategory với categoryId ${categoryId}:`, error);
+            throw error;
+        }
+    },
 };
 
 

@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 
 
-const IMAGE_BASE_URL = "https://localhost:7111"; // đường dẫn bên Backend
+const IMAGE_BASE_URL = "https://localhost:7067"; // đường dẫn bên Backend
 // file thành phần component  nhận vào đối tượng 'item' từ file thành phần component  cha truyền xuống
 function ProductCard({ item }) {
 

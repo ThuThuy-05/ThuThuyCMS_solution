@@ -1,10 +1,36 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿import React from "react";
 
-</body>
-</html>
+function LoadingOrEmpty({ loading }) {
+
+    if (loading) {
+
+        return (
+
+            <div className="text-center py-5">
+
+                <div
+                    className="spinner-border text-primary"
+                >
+                </div>
+
+                <p className="mt-3">
+                    Đang tải sản phẩm...
+                </p>
+
+            </div>
+
+        );
+    }
+
+    return (
+
+        <div className="alert alert-warning">
+
+            Không tìm thấy sản phẩm.
+
+        </div>
+
+    );
+}
+
+export default LoadingOrEmpty;
